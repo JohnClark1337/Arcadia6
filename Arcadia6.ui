@@ -42,11 +42,14 @@
        <height>51</height>
       </rect>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="text">
       <string>Antivirus</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_2">
+    <widget class="QPushButton" name="btnAntimalware">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -55,11 +58,14 @@
        <height>51</height>
       </rect>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="text">
       <string>Antimalware</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_3">
+    <widget class="QPushButton" name="btnClean">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -68,11 +74,14 @@
        <height>51</height>
       </rect>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="text">
       <string>Clean</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_4">
+    <widget class="QPushButton" name="btnSetup">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -81,11 +90,14 @@
        <height>51</height>
       </rect>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="text">
       <string>Setup</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_5">
+    <widget class="QPushButton" name="btnTools">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -93,6 +105,9 @@
        <width>151</width>
        <height>51</height>
       </rect>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
      </property>
      <property name="text">
       <string>Tools</string>
@@ -121,6 +136,9 @@
       <height>61</height>
      </rect>
     </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
     <property name="text">
      <string>Run</string>
     </property>
@@ -134,6 +152,9 @@
       <height>31</height>
      </rect>
     </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
     <property name="text">
      <string>Auto Run</string>
     </property>
@@ -146,6 +167,9 @@
       <width>411</width>
       <height>391</height>
      </rect>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
     </property>
     <property name="currentIndex">
      <number>0</number>
@@ -162,6 +186,17 @@
         <width>401</width>
         <height>361</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Arial Black</family>
+        <pointsize>14</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
       </property>
      </widget>
     </widget>
@@ -205,18 +240,11 @@
       <height>101</height>
      </rect>
     </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
     <property name="autoFillBackground">
      <bool>false</bool>
-    </property>
-   </widget>
-   <widget class="QListView" name="listView">
-    <property name="geometry">
-     <rect>
-      <x>650</x>
-      <y>140</y>
-      <width>161</width>
-      <height>101</height>
-     </rect>
     </property>
    </widget>
    <widget class="QPushButton" name="btnExit">
@@ -236,6 +264,9 @@
       <bold>true</bold>
      </font>
     </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
     <property name="text">
      <string>Exit</string>
     </property>
@@ -249,11 +280,30 @@
       <height>81</height>
      </rect>
     </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
     <property name="text">
      <string>No image</string>
     </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QTextBrowser" name="txtDescription">
+    <property name="geometry">
+     <rect>
+      <x>660</x>
+      <y>140</y>
+      <width>141</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
     </property>
    </widget>
   </widget>
@@ -281,6 +331,13 @@
    </property>
   </action>
  </widget>
+ <tabstops>
+  <tabstop>lstWindows</tabstop>
+  <tabstop>tabOS</tabstop>
+  <tabstop>btnExit</tabstop>
+  <tabstop>lstLinux</tabstop>
+  <tabstop>lstMac</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
