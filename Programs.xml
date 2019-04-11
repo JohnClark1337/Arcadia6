@@ -112,7 +112,7 @@
 	</Item>
 	<Item cat="Antimalware" name="Malwarebytes Antimalware">
 		<Description>Malwarebytes protects you against malware, ransomware, and other advanced online threats that have made antivirus obsolete and ineffective.</Description>
-		<Location>Programs\Antimalware\mbam.exe</Location>
+		<Location>Programs\Antimalware\mb3.exe</Location>
 		<Link>https://www.malwarebytes.com/</Link>
 		<Icon>Icons/MB.jpg</Icon>
 	</Item>

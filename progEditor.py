@@ -1,0 +1,93 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'progEditor.ui'
+#
+# Created by: PyQt5 UI code generator 5.9.2
+#
+# WARNING! All changes made in this file will be lost!
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+
+class Ui_frmXMLEdit(object):
+    def setupUi(self, frmXMLEdit):
+        frmXMLEdit.setObjectName("frmXMLEdit")
+        frmXMLEdit.resize(692, 467)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("Icons/Arcadia.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        frmXMLEdit.setWindowIcon(icon)
+        self.centralwidget = QtWidgets.QWidget(frmXMLEdit)
+        self.centralwidget.setObjectName("centralwidget")
+        self.lstMod = QtWidgets.QListWidget(self.centralwidget)
+        self.lstMod.setGeometry(QtCore.QRect(360, 30, 321, 301))
+        self.lstMod.setObjectName("lstMod")
+        self.btnAdd = QtWidgets.QPushButton(self.centralwidget)
+        self.btnAdd.setGeometry(QtCore.QRect(400, 340, 101, 23))
+        self.btnAdd.setObjectName("btnAdd")
+        self.btnRemove = QtWidgets.QPushButton(self.centralwidget)
+        self.btnRemove.setGeometry(QtCore.QRect(540, 340, 101, 23))
+        self.btnRemove.setObjectName("btnRemove")
+        self.lblCurrent = QtWidgets.QLabel(self.centralwidget)
+        self.lblCurrent.setGeometry(QtCore.QRect(120, 10, 71, 16))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(14)
+        self.lblCurrent.setFont(font)
+        self.lblCurrent.setObjectName("lblCurrent")
+        self.lblModified = QtWidgets.QLabel(self.centralwidget)
+        self.lblModified.setGeometry(QtCore.QRect(480, 10, 81, 16))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(14)
+        self.lblModified.setFont(font)
+        self.lblModified.setObjectName("lblModified")
+        self.lstCurrent = QtWidgets.QListWidget(self.centralwidget)
+        self.lstCurrent.setGeometry(QtCore.QRect(10, 30, 311, 301))
+        self.lstCurrent.setObjectName("lstCurrent")
+        self.btnExit = QtWidgets.QPushButton(self.centralwidget)
+        self.btnExit.setGeometry(QtCore.QRect(570, 390, 91, 31))
+        self.btnExit.setObjectName("btnExit")
+        self.chkChanges = QtWidgets.QCheckBox(self.centralwidget)
+        self.chkChanges.setGeometry(QtCore.QRect(210, 340, 70, 17))
+        self.chkChanges.setObjectName("chkChanges")
+        self.btnSave = QtWidgets.QPushButton(self.centralwidget)
+        self.btnSave.setGeometry(QtCore.QRect(270, 400, 151, 23))
+        self.btnSave.setObjectName("btnSave")
+        frmXMLEdit.setCentralWidget(self.centralwidget)
+        self.menubar = QtWidgets.QMenuBar(frmXMLEdit)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 692, 21))
+        self.menubar.setObjectName("menubar")
+        self.menuFile = QtWidgets.QMenu(self.menubar)
+        self.menuFile.setObjectName("menuFile")
+        frmXMLEdit.setMenuBar(self.menubar)
+        self.statusbar = QtWidgets.QStatusBar(frmXMLEdit)
+        self.statusbar.setObjectName("statusbar")
+        frmXMLEdit.setStatusBar(self.statusbar)
+        self.actionOpen = QtWidgets.QAction(frmXMLEdit)
+        self.actionOpen.setObjectName("actionOpen")
+        self.actionClose = QtWidgets.QAction(frmXMLEdit)
+        self.actionClose.setObjectName("actionClose")
+        self.actionSave = QtWidgets.QAction(frmXMLEdit)
+        self.actionSave.setObjectName("actionSave")
+        self.menuFile.addAction(self.actionOpen)
+        self.menuFile.addAction(self.actionSave)
+        self.menuFile.addAction(self.actionClose)
+        self.menubar.addAction(self.menuFile.menuAction())
+
+        self.retranslateUi(frmXMLEdit)
+        QtCore.QMetaObject.connectSlotsByName(frmXMLEdit)
+
+    def retranslateUi(self, frmXMLEdit):
+        _translate = QtCore.QCoreApplication.translate
+        frmXMLEdit.setWindowTitle(_translate("frmXMLEdit", "Program Editor"))
+        self.btnAdd.setText(_translate("frmXMLEdit", "Add"))
+        self.btnRemove.setText(_translate("frmXMLEdit", "Remove"))
+        self.lblCurrent.setText(_translate("frmXMLEdit", "Current"))
+        self.lblModified.setText(_translate("frmXMLEdit", "Modified"))
+        self.btnExit.setText(_translate("frmXMLEdit", "Exit"))
+        self.chkChanges.setText(_translate("frmXMLEdit", "Changes"))
+        self.btnSave.setText(_translate("frmXMLEdit", "Save"))
+        self.menuFile.setTitle(_translate("frmXMLEdit", "File"))
+        self.actionOpen.setText(_translate("frmXMLEdit", "Open"))
+        self.actionClose.setText(_translate("frmXMLEdit", "Close"))
+        self.actionSave.setText(_translate("frmXMLEdit", "Save"))
+

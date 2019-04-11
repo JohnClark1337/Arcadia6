@@ -107,6 +107,9 @@ class Ui_MainWindow(object):
         self.txtDescription.setGeometry(QtCore.QRect(660, 140, 141, 111))
         self.txtDescription.setFocusPolicy(QtCore.Qt.NoFocus)
         self.txtDescription.setObjectName("txtDescription")
+        self.btnEditor = QtWidgets.QPushButton(self.centralwidget)
+        self.btnEditor.setGeometry(QtCore.QRect(360, 430, 121, 31))
+        self.btnEditor.setObjectName("btnEditor")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 818, 21))
@@ -146,6 +149,7 @@ class Ui_MainWindow(object):
         self.tabOS.setTabText(self.tabOS.indexOf(self.tabMac), _translate("MainWindow", "Mac OS X"))
         self.btnExit.setText(_translate("MainWindow", "Exit"))
         self.iconImage.setText(_translate("MainWindow", "No image"))
+        self.btnEditor.setText(_translate("MainWindow", "Open Editor"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.actionExit.setText(_translate("MainWindow", "Exit"))
 
