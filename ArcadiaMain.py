@@ -86,8 +86,8 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
         self.btnAdd.clicked.connect(self.addEntry)
         self.actionClose.triggered.connect(self.close)
         self.btnExit.clicked.connect(self.close)
+        self.btnRefresh.clicked.connect(self.refreshList)
         copyfile('Programs.xml', 'temp.xml')
-        tempList = list((list(), list(), list(), list(), list()))
         readProgramList('temp.xml', tempList)
         self.populateList(self.lstMod, tempList)
 
@@ -95,6 +95,7 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
     def addEntry(self):
         addDia = AddProg(self)
         addDia.show()
+        self.refreshList()
         
     
     def populateList(self, wid, biglist):
@@ -108,16 +109,27 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
         wid.addItems(biglist[3])
         wid.addItem("\nRandom Tools:\n")
         wid.addItems(biglist[4])
+
+    def refreshList(self):
+        self.lstMod.clear()
+        for item in tempList:
+            item.clear()
+        readProgramList('temp.xml', tempList)
+        self.populateList(self.lstMod, tempList)
         
 
 class AddProg(QtWidgets.QDialog, diaAddProg.Ui_diaAddProg):
     def __init__(self, parent=None):
         super(AddProg, self).__init__(parent)
         self.setupUi(self)
+        self.parent = parent
+        self.buttonBox.accepted.connect(self.addProgramInfo)
+        
+
 
     def addProgramInfo(self):
-        print("Hello World")
-
+        writeTempList('temp.xml', 'Tools', 'Tacocat', 'this is a test of the taco cat', 'wherever', 'here is the link', 'here is the icon')
+        self.parent.refreshList()
 
 
 def main():
@@ -143,6 +155,21 @@ def readProgramList(fileLoc, biglist):
         for cat in biglist:
             cat.sort()
        
+def writeTempList(fileLoc, cat, name, des, loc, link, icon):
+    tree = ET.parse(fileLoc)
+    root = tree.getroot()
+    new_item = ET.SubElement(root, 'Item', attrib={"cat": cat, "name": name})
+    new_item_des = ET.SubElement(new_item, 'Description')
+    new_item_loc = ET.SubElement(new_item, 'Location')
+    new_item_link = ET.SubElement(new_item, 'Link')
+    new_item_icon = ET.SubElement(new_item, 'Icon')
+
+    new_item_des.text = des
+    new_item_loc.text = loc
+    new_item_link.text = link
+    new_item_icon.text = icon
+
+    tree.write(fileLoc)
 
 
 def dialog(text, title):
@@ -164,6 +191,7 @@ def runProgram():
 
 
 mainList = list((list(), list(), list(), list(), list()))
+tempList = list((list(), list(), list(), list(), list()))
 
 if __name__ == '__main__':
 
