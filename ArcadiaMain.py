@@ -82,6 +82,11 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
     def __init__(self, parent=None):
         super(EditorPy, self).__init__(parent)
         self.setupUi(self)
+        self.lblCurrentDiff.hide()
+        self.lblLeftArrow.hide()
+        self.lblModDiff.hide()
+        self.lblRightArrow.hide()
+        self.chkChanges.stateChanged.connect(self.showDiffs)
         self.populateList(self.lstCurrent, mainList)
         self.btnAdd.clicked.connect(self.addEntry)
         self.actionClose.triggered.connect(self.close)
@@ -98,6 +103,19 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
         self.refreshList()
         
     
+    def showDiffs(self, state):
+        if state == QtCore.Qt.Checked:
+            self.lblCurrentDiff.show()
+            self.lblLeftArrow.show()
+            self.lblModDiff.show()
+            self.lblRightArrow.show()
+        else:
+            self.lblCurrentDiff.hide()
+            self.lblLeftArrow.hide()
+            self.lblModDiff.hide()
+            self.lblRightArrow.hide()
+
+
     def populateList(self, wid, biglist):
         wid.addItem("Antivirus:\n")
         wid.addItems(biglist[0])
@@ -128,7 +146,22 @@ class AddProg(QtWidgets.QDialog, diaAddProg.Ui_diaAddProg):
 
 
     def addProgramInfo(self):
-        writeTempList('temp.xml', 'Tools', 'Tacocat', 'this is a test of the taco cat', 'wherever', 'here is the link', 'here is the icon')
+        name = self.tbxName.text()
+        loc = self.tbxLocation.text()
+        desc = self.tbxDescription.toPlainText()
+        ico = self.tbxItemLocation.text()
+        ty = ''
+        oss = ''
+        tboxes = {self.rbnAntimalware, self.rbnAntivirus, self.rbnClean, self.rbnSetup, self.rbnTools}
+        for t in tboxes:
+            if t.isChecked():
+                ty = t.text()
+        oboxes = {self.rbnLinux, self.rbnMac, self.rbnWindows}
+        for o in oboxes:
+            if o.isChecked():
+                oss = o.text()
+        writeTempList('temp.xml', ty, name, desc, loc, ' ', ico)
+        #writeTempList('temp.xml', 'Tools', 'Tacocat', 'this is a test of the taco cat', 'wherever', 'here is the link', 'here is the icon')
         self.parent.refreshList()
 
 

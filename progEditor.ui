@@ -21,9 +21,9 @@
    <widget class="QListWidget" name="lstMod">
     <property name="geometry">
      <rect>
-      <x>360</x>
+      <x>370</x>
       <y>30</y>
-      <width>321</width>
+      <width>311</width>
       <height>301</height>
      </rect>
     </property>
@@ -31,7 +31,7 @@
    <widget class="QPushButton" name="btnAdd">
     <property name="geometry">
      <rect>
-      <x>400</x>
+      <x>380</x>
       <y>340</y>
       <width>101</width>
       <height>23</height>
@@ -44,7 +44,7 @@
    <widget class="QPushButton" name="btnRemove">
     <property name="geometry">
      <rect>
-      <x>540</x>
+      <x>480</x>
       <y>340</y>
       <width>101</width>
       <height>23</height>
@@ -97,7 +97,7 @@
      <rect>
       <x>10</x>
       <y>30</y>
-      <width>311</width>
+      <width>301</width>
       <height>301</height>
      </rect>
     </property>
@@ -118,7 +118,7 @@
    <widget class="QCheckBox" name="chkChanges">
     <property name="geometry">
      <rect>
-      <x>210</x>
+      <x>310</x>
       <y>340</y>
       <width>70</width>
       <height>17</height>
@@ -144,14 +144,110 @@
    <widget class="QPushButton" name="btnRefresh">
     <property name="geometry">
      <rect>
-      <x>370</x>
-      <y>0</y>
-      <width>31</width>
+      <x>330</x>
+      <y>30</y>
+      <width>21</width>
       <height>23</height>
      </rect>
     </property>
     <property name="text">
      <string>R</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnBackup">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>340</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Backup</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnLoad">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>340</y>
+      <width>101</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Load</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblModDiff">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>70</y>
+      <width>41</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblCurrentDiff">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>180</y>
+      <width>41</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblRightArrow">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>100</y>
+      <width>41</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>Icons/rightarrow.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblLeftArrow">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>210</y>
+      <width>41</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>Icons/Left-Arrow-PNG-File.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
     </property>
    </widget>
   </widget>
