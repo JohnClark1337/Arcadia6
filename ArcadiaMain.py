@@ -86,6 +86,7 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
         self.lblLeftArrow.hide()
         self.lblModDiff.hide()
         self.lblRightArrow.hide()
+        self.btnRemove.clicked.connect(self.removeEntry)
         self.chkChanges.stateChanged.connect(self.showDiffs)
         self.populateList(self.lstCurrent, mainList)
         self.btnAdd.clicked.connect(self.addEntry)
@@ -101,6 +102,13 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
         addDia = AddProg(self)
         addDia.show()
         self.refreshList()
+
+    
+    def removeEntry(self):
+        name = self.lstMod.currentItem().text()
+        root = ET.parse('temp.xml').getroot()
+
+        
         
     
     def showDiffs(self, state):
@@ -109,6 +117,25 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
             self.lblLeftArrow.show()
             self.lblModDiff.show()
             self.lblRightArrow.show()
+            longmain = list()
+            longtemp = list()
+            for tItem in tempList:
+                for stItem in tItem:
+                    longtemp.append(stItem)
+            for mItem in mainList:
+                for smItem in mItem:
+                    longmain.append(smItem)
+            for lm in longmain:
+                if lm not in longtemp:
+                    print(lm + " will be removed.")
+            for lt in longtemp:
+                if lt not in longmain:
+                    print(lt + " will be added.")
+                    
+                        
+            
+                    
+                         
         else:
             self.lblCurrentDiff.hide()
             self.lblLeftArrow.hide()
