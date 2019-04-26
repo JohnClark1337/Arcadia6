@@ -96,6 +96,8 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
         copyfile('Programs.xml', 'temp.xml')
         readProgramList('temp.xml', tempList)
         self.populateList(self.lstMod, tempList)
+        
+        
 
 
     def addEntry(self):
@@ -119,22 +121,31 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
             self.lblRightArrow.show()
             longmain = list()
             longtemp = list()
+            mint = 0
+            tint = 0
             for tItem in tempList:
                 for stItem in tItem:
+                    tint += 1
                     longtemp.append(stItem)
             for mItem in mainList:
                 for smItem in mItem:
+                    mint += 1
                     longmain.append(smItem)
             for lm in longmain:
                 if lm not in longtemp:
+                    mdif = 0
+                    if mint > tint:
+                        mdif = mint - tint
+                    self.lblCurrentDiff.setText(str(mdif))
                     print(lm + " will be removed.")
             for lt in longtemp:
                 if lt not in longmain:
+                    tdif = 0
+                    if tint > mint:
+                        tdif = tint - mint
+                    self.lblModDiff.setText(str(tdif))
                     print(lt + " will be added.")
-                    
-                        
-            
-                    
+                                      
                          
         else:
             self.lblCurrentDiff.hide()
@@ -169,6 +180,8 @@ class AddProg(QtWidgets.QDialog, diaAddProg.Ui_diaAddProg):
         self.setupUi(self)
         self.parent = parent
         self.buttonBox.accepted.connect(self.addProgramInfo)
+        self.tbtnLocation.clicked.connect(lambda: self.openFileDialog(0))
+        self.tbtnItemLocation.clicked.connect(lambda: self.openFileDialog(1))
         
 
 
@@ -190,6 +203,23 @@ class AddProg(QtWidgets.QDialog, diaAddProg.Ui_diaAddProg):
         writeTempList('temp.xml', ty, name, desc, loc, ' ', ico)
         #writeTempList('temp.xml', 'Tools', 'Tacocat', 'this is a test of the taco cat', 'wherever', 'here is the link', 'here is the icon')
         self.parent.refreshList()
+
+    
+    def openFileDialog(self, ftype):
+        if ftype == 0:
+            d = QtWidgets.QFileDialog.getOpenFileName(
+            self, "Select File", os.path.expanduser('~'),
+            filter=('Windows Executable (*.exe)'))[0]
+            if d != '':
+                self.tbxLocation.setText(d)
+           
+        else:
+            d = QtWidgets.QFileDialog.getOpenFileName(
+            self, "Select File", os.path.expanduser('~'),
+            filter=('PNG File (*.png)'))[0]
+            if d != '':
+                self.tbxItemLocation.setText(d)
+            
 
 
 def main():
