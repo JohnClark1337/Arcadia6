@@ -4,11 +4,12 @@ from shutil import copyfile
 import PyQt5
 import xml.etree.ElementTree as ET
 import sys
-import os
+import os, ctypes
 import subprocess
 import Arcadia6
 import progEditor
 import diaAddProg
+import utilDialog
 
 class ArcadiaPy(QtWidgets.QMainWindow, Arcadia6.Ui_MainWindow):
     def __init__(self, parent=None):
@@ -28,12 +29,16 @@ class ArcadiaPy(QtWidgets.QMainWindow, Arcadia6.Ui_MainWindow):
         self.btnTools.clicked.connect(lambda: self.softwareList(5))
         self.btnRun.clicked.connect(runProgram)
         self.btnEditor.clicked.connect(self.openEditor)
+        self.btnUtilites.clicked.connect(self.openUtil)
     
 
     def openEditor(self):
         formEdit = EditorPy(self)
         formEdit.show()
 
+    def openUtil(self):
+        util = UtilDialog(self)
+        util.show()
 
     def clearLists(self):
         self.lstWindows.clear()
@@ -73,6 +78,15 @@ class ArcadiaPy(QtWidgets.QMainWindow, Arcadia6.Ui_MainWindow):
                     self.iconImage.setPixmap(pix)
                     self.txtDescription.setText(item.find('Description').text)
                     selectedLocation = item.find('Location').text
+                    if os.path.exists(selectedLocation) == False:
+                        self.lblAvailable.setText("Unavailable")
+                        self.lblAvailable.setStyleSheet("QLabel {background-color: red; color: white} QToolTip {background-color: white; color: black}")
+                        self.lblAvailable.setToolTip("Program not available.")
+                    else:
+                        self.lblAvailable.setText("Available")
+                        self.lblAvailable.setStyleSheet("QLabel {background-color: green; color: white} QToolTip{background-color: white; color: black}")
+                        self.lblAvailable.setToolTip("Program Available")
+                    self.lblWebsite.setText('<a href="{}">Website</a>'.format(item.find('Link').text))
         except:
             pix = PyQt5.QtGui.QPixmap("Icons/Arcadia.ico")
             self.iconImage.setPixmap(pix)
@@ -97,8 +111,6 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
         copyfile('Programs.xml', 'temp.xml')
         readProgramList('temp.xml', tempList)
         self.populateList(self.lstMod, tempList)
-        
-        
 
 
     def addEntry(self):
@@ -111,8 +123,6 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
         name = self.lstMod.currentItem().text()
         root = ET.parse('temp.xml').getroot()
 
-        
-        
     
     def showDiffs(self, state):
         if state == QtCore.Qt.Checked:
@@ -145,8 +155,7 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
                     if tint > mint:
                         tdif = tint - mint
                     self.lblModDiff.setText(str(tdif))
-                    print(lt + " will be added.")
-                                      
+                    print(lt + " will be added.")             
                          
         else:
             self.lblCurrentDiff.hide()
@@ -202,10 +211,9 @@ class AddProg(QtWidgets.QDialog, diaAddProg.Ui_diaAddProg):
             if o.isChecked():
                 oss = o.text()
         writeTempList('temp.xml', ty, name, desc, loc, ' ', ico)
-        #writeTempList('temp.xml', 'Tools', 'Tacocat', 'this is a test of the taco cat', 'wherever', 'here is the link', 'here is the icon')
         self.parent.refreshList()
 
-    
+
     def openFileDialog(self, ftype):
         if ftype == 0:
             d = QtWidgets.QFileDialog.getOpenFileName(
@@ -213,14 +221,95 @@ class AddProg(QtWidgets.QDialog, diaAddProg.Ui_diaAddProg):
             filter=('Windows Executable (*.exe);;Microsoft Installer (*.msi)'))[0]
             if d != '':
                 self.tbxLocation.setText(d)
-           
         else:
             d = QtWidgets.QFileDialog.getOpenFileName(
             self, "Select File", os.path.expanduser('~'),
             filter=('PNG File (*.png);;JPEG/JPG (*.jpeg *.jpg)'))[0]
             if d != '':
                 self.tbxItemLocation.setText(d)
-            
+
+class UtilDialog(QtWidgets.QDialog, utilDialog.Ui_frmUtilities):
+    def __init__(self, parent=None):
+        super(UtilDialog, self).__init__(parent)
+        self.setupUi(self)
+        self.parent = parent
+        self.aCheck()
+        self.btnBackup.clicked.connect(self.runBackup)
+        self.btnDriver.clicked.connect(self.runDriverBackup)
+        self.btnExit.clicked.connect(self.close)
+
+    def aCheck(self):
+        if checkIfAdmin() == False:
+            dialog("Best used if Arcadia is run as Administrator", "User Not Administrator")
+
+    def winBackup(self, ffold, tfold):
+        #print("Running Backup")
+        try:
+            subprocess.check_output("robocopy {0} {1} /MIR /R:1 /W:1 /xj /MT:8".format(ffold, tfold), shell=True)
+            dialog("Backup Complete. No Files Were Copied.", "Backup Successfull")
+        except subprocess.CalledProcessError as e:
+            self.roboWeird(e.returncode)
+
+
+    def roboWeird(self, ec):
+        if ec == 1:
+            dialog("Backup Completed Successfully", "Backup Successfull")
+        elif ec == 2:
+            dialog("No Files Copied", "Backup Successfull")
+        elif ec == 4:
+            dialog("Mismatched files or directories detected. Check manually", "Backup Completed")
+        elif ec == 8:
+            dialog("Copy Errors Occurred and retry limit was exceeded. Some files/directories may have not been moved", "Backup May Have Failed")
+        elif ec == 16:
+            dialog("Serious Error. No files copied.", "Backup Failed")
+        else:
+            dialog("Unknown Error.", "Backup Probably Failed")
+
+    def winDriverBackup(self, tfold):
+        driverLocations = ["%SystemRoot%\\Driver Cache\\i386\\drivers.cab", "%SystemRoot%\\Driver Cache\\i386\\service_pack.cab", "%windir%\\inf", "%SystemRoot%\\System32\\Drivers", "%SystemRoot%\\System32"]
+        winver = checkWindows()
+        if winver != 1:
+            try:
+                dialog("The Power of Shell", "Powershell")
+                subprocess.Popen("Export-WindowsDriver -Online -Destination {}".format(tfold))
+            except:
+                dialog("Unable to copy drivers. Attempting Manual Backup", "Switching to Manual")
+                try:
+                    for item in driverLocations:
+                        subprocess.check_output("robocopy {0} {1} /MIR /xj /MT:8".format(item, tfold))
+                    dialog("Backup Finished", "Backup Completed")
+                except subprocess.CalledProcessError as e:
+                    self.roboWeird(e.returncode)
+    
+        else:
+            for item in driverLocations:
+                subprocess.check_output("robocopy {0} {1} /MIR /xj /MT:8".format(item, tfold))
+
+
+    def runBackup(self):
+        ff = self.tbxFrom.text()
+        tf = self.tbxTo.text()
+        if ff != "" and ff != None and tf != '' and tf != None:
+            winstate = int(checkWindows())
+            if winstate == 1:
+                dialog("Detected Windows XP. Using XCopy", "XP Detected")
+            elif winstate == 2:
+                dialog("Detected Windows 10. Using Robocopy", "Win 10 Detected")
+                self.winBackup(ff, tf) 
+            else:
+                self.winBackup(ff, tf)
+
+    def runDriverBackup(self):
+        tf = self.tbxDriver.text()
+        if tf != "" and tf != None:
+            winstate = int(checkWindows())
+            if winstate == 1:
+                dialog("Detected Windows XP. Using Xcopy", "XP Detected")
+            elif winstate == 2:
+                dialog("Detected Windows 10. Attempting to use Powershell", "Win 10 Detected")
+                self.winDriverBackup(tf)
+            else:
+                self.winDriverBackup(tf)
 
 
 def main():
@@ -245,7 +334,30 @@ def readProgramList(fileLoc, biglist):
 
         for cat in biglist:
             cat.sort()
-       
+
+
+def checkWindows():
+    if sys.platform == "win32":
+        ver = subprocess.getoutput('systeminfo | findstr /B /C:"OS Version"')
+        ver = str(ver)
+        #Check if Win XP
+        if "5.1" in ver:
+            return 1
+        #Check if Win 10
+        elif "10.0" in ver:
+            return 2
+        else:
+            return 0
+
+def checkIfAdmin():
+    try:
+        is_admin = os.getuid() == 0
+    except AttributeError:
+        is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+
+    return is_admin
+
+
 def writeTempList(fileLoc, cat, name, des, loc, link, icon):
     tree = ET.parse(fileLoc)
     root = tree.getroot()
@@ -280,6 +392,10 @@ def dialog(text, title):
 def runProgram():
     try:
         if selectedLocation is not '':
+            #os.system(selectedLocation)
+            #subprocess is opening in appdata directory. May need to fix.
+            #home = os.path.expanduser('~')
+            #subprocess.Popen(["{0}\\Documents\\Arcadia 6\\{1}".format(home, selectedLocation)])
             subprocess.call([selectedLocation])
     except:
         dialog("Program Not Found at {}".format(selectedLocation), "Error") 
