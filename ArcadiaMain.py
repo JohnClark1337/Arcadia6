@@ -4,6 +4,7 @@ from shutil import copyfile
 import PyQt5
 import xml.etree.ElementTree as ET
 import sys
+import shlex
 import os, ctypes
 import subprocess
 import Arcadia6
@@ -123,8 +124,18 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
 
     
     def removeEntry(self):
-        name = self.lstMod.currentItem().text()
-        root = ET.parse('temp.xml').getroot()
+        name = self.lstMod.selectedItems()
+        name = name[0].text()
+        tree = ET.parse('temp.xml')
+        root = tree.getroot()
+
+        for item in root:
+            if item.attrib["name"] == name:
+                dialog("Removing {}".format(item.attrib['name']), "Removing Item")
+                root.remove(item)
+
+        tree.write("temp.xml")  
+        self.refreshList()
 
     
     def showDiffs(self, state):
@@ -158,7 +169,7 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
                     if tint > mint:
                         tdif = tint - mint
                     self.lblModDiff.setText(str(tdif))
-                    print(lt + " will be added.")             
+                    #print(lt + " will be added.")             
                          
         else:
             self.lblCurrentDiff.hide()
@@ -240,6 +251,9 @@ class UtilDialog(QtWidgets.QDialog, utilDialog.Ui_frmUtilities):
         self.btnBackup.clicked.connect(self.runBackup)
         self.btnDriver.clicked.connect(self.runDriverBackup)
         self.btnExit.clicked.connect(self.close)
+        self.tbnFrom.clicked.connect(lambda: self.openDirDialog(0))
+        self.tbnTo.clicked.connect(lambda: self.openDirDialog(1))
+        #self.btnTest.clicked.connect(self.testCounter)
 
     def aCheck(self):
         if checkIfAdmin() == False:
@@ -247,18 +261,72 @@ class UtilDialog(QtWidgets.QDialog, utilDialog.Ui_frmUtilities):
 
     def winBackup(self, ffold, tfold):
         #print("Running Backup")
-        try:
-            subprocess.check_output("robocopy {0} {1} /MIR /R:1 /W:1 /xj /MT:8".format(ffold, tfold), shell=True)
-            dialog("Backup Complete. No Files Were Copied.", "Backup Successfull")
-        except subprocess.CalledProcessError as e:
-            self.roboWeird(e.returncode)
+        winstate = int(checkWindows())
+        if winstate == 1:
+            try:
+                subprocess.Popen(shlex.split('xcopy "{0}" "{1}" /MEGHY'.format(ffold, tfold)))
+                #self.monitorFileMove(process)
+                dialog("Backup Complete.", "Backup Successful")
+            except subprocess.CalledProcessError as e:
+                self.xcopyWeird(e.returncode)
+        elif winstate > 1 and winstate <= 6:
+            try:
+                subprocess.Popen('robocopy "{0}" "{1}" /e /z /R:1 /W:1 /xj /xf desktop.ini /MT:8'.format(ffold, tfold))
+                #self.monitorFileMove(process)
+                
+                dialog("Backup Complete.", "Backup Successful")
+            except subprocess.CalledProcessError as e:
+                self.roboWeird(e.returncode)
+        else:
+            dialog("Unsupported Windows Version", "Unable to Copy")
+        self.tbxFrom.setText("")
+        self.tbxTo.setText("")
 
+
+    def fileCounter(self, folder1):
+        global filelist
+        for root, dirs, files in os.walk(folder1):
+            for name in files:
+                if name != 'desktop.ini':
+                    filelist.append(name)
+            for name in dirs:
+                self.fileCounter(name)
+        
+
+
+    #def folderCompare(self, folder1, folder2):
+    # def testCounter(self):
+    #     self.fileCounter(self.tbxFrom.text())
+    #     dialog("There are {} files total.".format(len(filelist)), "Total Files")
+    #     print(filelist)
+
+
+    def xcopyWeird(self, ec):
+        if ec == 1:
+            dialog("No files were found to copy.", "Backup Successful")
+        elif ec == 2:
+            dialog("Xcopy process terminated.", "Backup Terminated")
+        elif ec == 4:
+            dialog("Not enough memory or disk space.", "Backup Failed")
+        elif ec == 5:
+            dialog("Disk Write Error Occurred.", "Backup Failed")
+
+
+    def monitorFileMove(self, proc):
+        #stdout = proc.communicate()[0]
+        while True:
+            output = proc.stdout.readline()
+            if output == '' and proc.poll() is not None:
+                break
+            if output:    
+                self.txtInfo.append(output.strip())
+        #print('STDOUT:{}'.format(stdout))
 
     def roboWeird(self, ec):
         if ec == 1:
             dialog("Backup Completed Successfully", "Backup Successfull")
         elif ec == 2:
-            dialog("No Files Copied", "Backup Successfull")
+            dialog("Some files were skipped", "Backup Successfull")
         elif ec == 4:
             dialog("Mismatched files or directories detected. Check manually", "Backup Completed")
         elif ec == 8:
@@ -268,51 +336,59 @@ class UtilDialog(QtWidgets.QDialog, utilDialog.Ui_frmUtilities):
         else:
             dialog("Unknown Error.", "Backup Probably Failed")
 
-    def winDriverBackup(self, tfold):
+    def winDriverBackup(self, tfold, winver):
         driverLocations = ["%SystemRoot%\\Driver Cache\\i386\\drivers.cab", "%SystemRoot%\\Driver Cache\\i386\\service_pack.cab", "%windir%\\inf", "%SystemRoot%\\System32\\Drivers", "%SystemRoot%\\System32"]
-        winver = checkWindows()
         if winver != 1:
             try:
-                dialog("The Power of Shell", "Powershell")
                 subprocess.Popen("Export-WindowsDriver -Online -Destination {}".format(tfold))
             except:
-                dialog("Unable to copy drivers. Attempting Manual Backup", "Switching to Manual")
+                dialog("Unable to copy drivers. Attempting Robocopy Backup", "Switching to Robocopy")
                 try:
                     for item in driverLocations:
-                        subprocess.check_output("robocopy {0} {1} /MIR /xj /MT:8".format(item, tfold))
+                        subprocess.check_output('robocopy "{0}" "{1}" /MIR /xj /MT:8'.format(item, tfold))
                     dialog("Backup Finished", "Backup Completed")
                 except subprocess.CalledProcessError as e:
                     self.roboWeird(e.returncode)
-    
         else:
             for item in driverLocations:
-                subprocess.check_output("robocopy {0} {1} /MIR /xj /MT:8".format(item, tfold))
-
+                try:
+                    subprocess.check_output('xcopy "{0}" "{1}" /MEGHY'.format(item, tfold))
+                except subprocess.CalledProcessError as e:
+                    self.xcopyWeird(e.returncode)
+            
+    def openDirDialog(self, ftype):
+        d = QtWidgets.QFileDialog.getExistingDirectory(self, "Select a Directory", os.path.expanduser('~'))
+        if ftype == 0:
+            if d != '':
+                self.tbxFrom.setText(d)
+        elif ftype == 1:
+            if d != '':
+                self.tbxTo.setText(d)
+        else:
+            print("Hello World")
 
     def runBackup(self):
         ff = self.tbxFrom.text()
         tf = self.tbxTo.text()
         if ff != "" and ff != None and tf != '' and tf != None:
-            winstate = int(checkWindows())
-            if winstate == 1:
-                dialog("Detected Windows XP. Using XCopy", "XP Detected")
-            elif winstate == 2:
-                dialog("Detected Windows 10. Using Robocopy", "Win 10 Detected")
-                self.winBackup(ff, tf) 
-            else:
+            if sys.platform == 'win32':
                 self.winBackup(ff, tf)
+            else:
+                print("Not currently supported")
 
     def runDriverBackup(self):
         tf = self.tbxDriver.text()
-        if tf != "" and tf != None:
-            winstate = int(checkWindows())
-            if winstate == 1:
-                dialog("Detected Windows XP. Using Xcopy", "XP Detected")
-            elif winstate == 2:
-                dialog("Detected Windows 10. Attempting to use Powershell", "Win 10 Detected")
-                self.winDriverBackup(tf)
-            else:
-                self.winDriverBackup(tf)
+        if sys.platform == 'win32':
+            versions = {2: "Vista", 3: "7", 4: "8", 5: "8.1", 6: "10"}
+            if tf != "" and tf != None:
+                winstate = int(checkWindows())
+                if winstate == 1:
+                    dialog("Detected Windows XP. Using Xcopy", "XP Detected")
+                elif winstate > 1 and winstate <= 6:
+                    dialog("Detected Windows {}. Attempting to use Powershell Driver Backup", "Win {} Detected".format(versions[winstate]))
+                else:
+                    dialog("Unknown version of Windows", "Unable to Backup Drivers")
+                self.winDriverBackup(tf, winstate)
 
 
 def main():
@@ -320,6 +396,20 @@ def main():
     form = ArcadiaPy()
     form.show()
     app.exec_()
+
+
+"""
+readProgramList()
+Arguments:
+    fileLoc: Location of XML file with stored application information
+    biglist: QListbox that will be populated with the information from the XML file
+
+Description:
+Takes an XML file with the list of programs (either main or temporary), and a qlistbox widget
+and populates the qlistbox widget with the names taken from xml file based on application category.
+
+"""
+
 
 def readProgramList(fileLoc, biglist):
     root = ET.parse(fileLoc).getroot()
@@ -339,6 +429,17 @@ def readProgramList(fileLoc, biglist):
             cat.sort()
 
     
+"""
+checkWindows()
+Arguments: None
+
+Description:
+Determines what version of Windows is being run. Necessary for determining whether to run
+robocopy (which is included with versions of Windows beyond XP) or xcopy. Also Could be
+useful for other situations.
+
+"""
+
 
 def checkWindows():
     if sys.platform == "win32":
@@ -347,11 +448,34 @@ def checkWindows():
         #Check if Win XP
         if "5.1" in ver:
             return 1
+        #Check if Win Vista
+        elif "6.0" in ver:
+            return 2
+        #Check if Win 7
+        elif "6.1" in ver:
+            return 3
+        #Check if Win 8
+        elif "6.2" in ver:
+            return 4
+        #Check if Win 8.1
+        elif "6.3" in ver:
+            return 5
         #Check if Win 10
         elif "10.0" in ver:
-            return 2
+            return 6
         else:
             return 0
+
+"""
+checkIfAdmin()
+Arguments: None
+
+Description:
+Checks if the user has administrator access and returns true or false.
+
+"""
+
+
 
 def checkIfAdmin():
     try:
@@ -360,6 +484,25 @@ def checkIfAdmin():
         is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
 
     return is_admin
+
+
+"""
+writeTempList()
+Arguments:
+    fileLoc: Location of XML file to parse
+    cat: Category of application (Antivirus, Antimalware, Clean, Setup, Tool)
+    name: Name of application
+    des: Description of application
+    loc: Application location on the disk (try to use generic location)
+    link: Link to website of application developer or download location
+    icon: Icon for application
+
+Description:
+Adds a new entry to the temporary XML file (temp.xml). Entry will not change the primary
+program.xml file.
+
+
+"""
 
 
 def writeTempList(fileLoc, cat, name, des, loc, link, icon):
@@ -379,9 +522,32 @@ def writeTempList(fileLoc, cat, name, des, loc, link, icon):
     tree.write(fileLoc)
 
 
+"""
+clearTempList()
+Arguments: None
+Description:
+Clears out the temporary list so that it can be repopulated with
+default values when the program editor widget opens.
+
+"""
+
+
 def clearTempList():
     for items in tempList:
         items.clear()
+
+
+"""
+dialog()
+Arguments:
+    text: Message that you want delivered with the dialog box
+    title: Title of the dialog box
+Description:
+Easy implementation of a basic dialog box that simply delivers a message
+and allows the user to click 'ok'
+
+"""
+
 
 def dialog(text, title):
     msg = QtWidgets.QMessageBox()
@@ -391,6 +557,17 @@ def dialog(text, title):
     msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
     msg.exec_()
 
+
+"""
+runProgram()
+Arguments: None
+Description:
+Runs program determined by 'selectedLocation' global variable. Currently using subprocess.call([selectedLocation])
+to run the program, but having trouble when running through visual studio code with anaconda as the subprocess
+opens in a separate directory from the program file location. Using a specific location may be necessary, but would
+require users to place all programs in a specific location. Working on a solution.
+
+"""
 
 
 def runProgram():
@@ -404,9 +581,12 @@ def runProgram():
     except:
         dialog("Program Not Found at {}".format(selectedLocation), "Error") 
 
-
+#Primary programs list
 mainList = list((list(), list(), list(), list(), list()))
+#Temporary programs list for user manipulation
 tempList = list((list(), list(), list(), list(), list()))
+
+filelist = list()
 
 if __name__ == '__main__':
 

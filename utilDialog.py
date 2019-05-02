@@ -41,6 +41,13 @@ class Ui_frmUtilities(object):
         self.btnDriver = QtWidgets.QPushButton(frmUtilities)
         self.btnDriver.setGeometry(QtCore.QRect(420, 120, 121, 23))
         self.btnDriver.setObjectName("btnDriver")
+        self.btnTest = QtWidgets.QPushButton(frmUtilities)
+        self.btnTest.setGeometry(QtCore.QRect(490, 180, 75, 23))
+        self.btnTest.setObjectName("btnTest")
+        self.pbrFiles = QtWidgets.QProgressBar(frmUtilities)
+        self.pbrFiles.setGeometry(QtCore.QRect(40, 270, 411, 23))
+        self.pbrFiles.setProperty("value", 0)
+        self.pbrFiles.setObjectName("pbrFiles")
 
         self.retranslateUi(frmUtilities)
         QtCore.QMetaObject.connectSlotsByName(frmUtilities)
@@ -57,4 +64,5 @@ class Ui_frmUtilities(object):
         self.tbxDriver.setPlaceholderText(_translate("frmUtilities", "Driver Backup Location"))
         self.tbnDriver.setText(_translate("frmUtilities", "..."))
         self.btnDriver.setText(_translate("frmUtilities", "Driver Backup"))
+        self.btnTest.setText(_translate("frmUtilities", "test"))
 
