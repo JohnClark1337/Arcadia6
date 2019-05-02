@@ -93,6 +93,7 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
         self.actionClose.triggered.connect(self.close)
         self.btnExit.clicked.connect(self.close)
         self.btnRefresh.clicked.connect(self.refreshList)
+        clearTempList()
         copyfile('Programs.xml', 'temp.xml')
         readProgramList('temp.xml', tempList)
         self.populateList(self.lstMod, tempList)
@@ -209,14 +210,14 @@ class AddProg(QtWidgets.QDialog, diaAddProg.Ui_diaAddProg):
         if ftype == 0:
             d = QtWidgets.QFileDialog.getOpenFileName(
             self, "Select File", os.path.expanduser('~'),
-            filter=('Windows Executable (*.exe)'))[0]
+            filter=('Windows Executable (*.exe);;Microsoft Installer (*.msi)'))[0]
             if d != '':
                 self.tbxLocation.setText(d)
            
         else:
             d = QtWidgets.QFileDialog.getOpenFileName(
             self, "Select File", os.path.expanduser('~'),
-            filter=('PNG File (*.png)'))[0]
+            filter=('PNG File (*.png);;JPEG/JPG (*.jpeg *.jpg)'))[0]
             if d != '':
                 self.tbxItemLocation.setText(d)
             
@@ -261,6 +262,10 @@ def writeTempList(fileLoc, cat, name, des, loc, link, icon):
 
     tree.write(fileLoc)
 
+
+def clearTempList():
+    for items in tempList:
+        items.clear()
 
 def dialog(text, title):
     msg = QtWidgets.QMessageBox()
