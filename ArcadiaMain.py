@@ -86,7 +86,10 @@ class ArcadiaPy(QtWidgets.QMainWindow, Arcadia6.Ui_MainWindow):
                         self.lblAvailable.setText("Available")
                         self.lblAvailable.setStyleSheet("QLabel {background-color: green; color: white} QToolTip{background-color: white; color: black}")
                         self.lblAvailable.setToolTip("Program Available")
-                    self.lblWebsite.setText('<a href="{}">Website</a>'.format(item.find('Link').text))
+                    if sys.platform == 'win32':
+                        self.lblWebsite.setText('<a href="{}">Website</a>'.format(item.find('Link').text))
+                    else:
+                        self.lblWebsite.setDisabled
         except:
             pix = PyQt5.QtGui.QPixmap("Icons/Arcadia.ico")
             self.iconImage.setPixmap(pix)
@@ -335,6 +338,7 @@ def readProgramList(fileLoc, biglist):
         for cat in biglist:
             cat.sort()
 
+    
 
 def checkWindows():
     if sys.platform == "win32":
