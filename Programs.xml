@@ -1,6 +1,9 @@
 <?xml version="1.0" ?>
 
-<Programs>
+<Programs
+xmlns="http://harlocktech.com/Arcadia6"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://harlocktech.com/Arcadia6 programschema.xsd">
 	<Item cat="Antivirus" name="Avira">
 		<Description>Good free antivirus</Description>
 		<Location>Programs\Antivirus\avira.exe</Location>

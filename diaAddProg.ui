@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>475</width>
-    <height>276</height>
+    <height>325</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,7 +21,7 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>240</y>
+     <y>270</y>
      <width>341</width>
      <height>32</height>
     </rect>
@@ -121,7 +121,7 @@
    <property name="geometry">
     <rect>
      <x>140</x>
-     <y>210</y>
+     <y>200</y>
      <width>41</width>
      <height>41</height>
     </rect>
@@ -265,6 +265,19 @@
      <string>Linux</string>
     </property>
    </widget>
+  </widget>
+  <widget class="QLineEdit" name="tbxURL">
+   <property name="geometry">
+    <rect>
+     <x>62</x>
+     <y>240</y>
+     <width>281</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="placeholderText">
+    <string>URL</string>
+   </property>
   </widget>
  </widget>
  <resources/>

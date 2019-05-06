@@ -1,12 +1,14 @@
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.uic import loadUi
 from shutil import copyfile
 import PyQt5
 import xml.etree.ElementTree as ET
 import sys
 import shlex
+import time
 import os, ctypes
 import subprocess
+import threading
 import Arcadia6
 import progEditor
 import diaAddProg
@@ -73,12 +75,12 @@ class ArcadiaPy(QtWidgets.QMainWindow, Arcadia6.Ui_MainWindow):
             itemName = self.lstWindows.currentItem().text()
             root = ET.parse('Programs.xml').getroot()
 
-            for item in root.findall('Item'):
+            for item in root.findall('ns1:Item', namespace):
                 if item.get('name') ==  itemName:
-                    pix = PyQt5.QtGui.QPixmap(item.find('Icon').text)
+                    pix = PyQt5.QtGui.QPixmap(item.find('ns1:Icon', namespace).text)
                     self.iconImage.setPixmap(pix)
-                    self.txtDescription.setText(item.find('Description').text)
-                    selectedLocation = item.find('Location').text
+                    self.txtDescription.setText(item.find('ns1:Description', namespace).text)
+                    selectedLocation = item.find('ns1:Location', namespace).text
                     if os.path.exists(selectedLocation) == False:
                         self.lblAvailable.setText("Unavailable")
                         self.lblAvailable.setStyleSheet("QLabel {background-color: red; color: white} QToolTip {background-color: white; color: black}")
@@ -88,7 +90,7 @@ class ArcadiaPy(QtWidgets.QMainWindow, Arcadia6.Ui_MainWindow):
                         self.lblAvailable.setStyleSheet("QLabel {background-color: green; color: white} QToolTip{background-color: white; color: black}")
                         self.lblAvailable.setToolTip("Program Available")
                     if sys.platform == 'win32':
-                        self.lblWebsite.setText('<a href="{}">Website</a>'.format(item.find('Link').text))
+                        self.lblWebsite.setText('<a href="{}">Website</a>'.format(item.find('ns1:Link', namespace).text))
                     else:
                         self.lblWebsite.setDisabled
         except:
@@ -115,17 +117,35 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
         copyfile('Programs.xml', 'temp.xml')
         readProgramList('temp.xml', tempList)
         self.populateList(self.lstMod, tempList)
+        self.btnChange.clicked.connect(self.changeEntry)
 
 
     def addEntry(self):
+        changeList.clear()
         addDia = AddProg(self)
         addDia.show()
         self.refreshList()
 
     
-    def removeEntry(self):
-        name = self.lstMod.selectedItems()
-        name = name[0].text()
+    def changeEntry(self):
+        changeList.clear()
+        cname = self.lstMod.selectedItems()
+        if len(cname) > 0:
+            cname = cname[0].text()
+            readProgramList('temp.xml',None,cname)
+            addDia = AddProg(self)
+            addDia.show()
+        else:
+            dialog("No Entry Selected", "Nothing Selected")
+        self.refreshList()
+
+
+    def removeEntry(self, n=''):
+        if n == '' or n == False:
+            name = self.lstMod.selectedItems()
+            name = name[0].text()
+        else: 
+            name = n
         tree = ET.parse('temp.xml')
         root = tree.getroot()
 
@@ -150,32 +170,39 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
             tint = 0
             for tItem in tempList:
                 for stItem in tItem:
-                    tint += 1
+                    
                     longtemp.append(stItem)
             for mItem in mainList:
                 for smItem in mItem:
-                    mint += 1
+                    
                     longmain.append(smItem)
             for lm in longmain:
                 if lm not in longtemp:
-                    mdif = 0
-                    if mint > tint:
-                        mdif = mint - tint
-                    self.lblCurrentDiff.setText(str(mdif))
-                    print(lm + " will be removed.")
+                    mint += 1
+                    self.lblCurrentDiff.setText("-" + str(mint))
             for lt in longtemp:
                 if lt not in longmain:
-                    tdif = 0
-                    if tint > mint:
-                        tdif = tint - mint
-                    self.lblModDiff.setText(str(tdif))
-                    #print(lt + " will be added.")             
+                    tint += 1
+                    self.lblModDiff.setText("+" + str(tint))
+                  
+
+            self.colorChange(mainList, self.lstMod, self.lstCurrent, QtCore.Qt.red)
+            self.colorChange(tempList, self.lstCurrent, self.lstMod, QtCore.Qt.green)
+            
                          
         else:
             self.lblCurrentDiff.hide()
             self.lblLeftArrow.hide()
             self.lblModDiff.hide()
             self.lblRightArrow.hide()
+
+
+    def colorChange(self, l, w1, w2, c):
+        for zitem in l:
+            for prog in zitem:
+                it = w1.findItems(prog, QtCore.Qt.MatchExactly)
+                if len(it) == 0:
+                    w2.findItems(prog, QtCore.Qt.MatchExactly)[0].setBackground(QtGui.QBrush(c, QtCore.Qt.SolidPattern))
 
 
     def populateList(self, wid, biglist):
@@ -206,6 +233,16 @@ class AddProg(QtWidgets.QDialog, diaAddProg.Ui_diaAddProg):
         self.buttonBox.accepted.connect(self.addProgramInfo)
         self.tbtnLocation.clicked.connect(lambda: self.openFileDialog(0))
         self.tbtnItemLocation.clicked.connect(lambda: self.openFileDialog(1))
+        if len(changeList) > 0:
+            self.tbxName.setText(changeList[0])
+            self.tbxDescription.appendPlainText(changeList[2])
+            self.tbxLocation.setText(changeList[3])
+            self.tbxURL.setText(changeList[4])
+            self.tbxItemLocation.setText(changeList[5])
+            btnList1 = {self.rbnAntivirus, self.rbnAntimalware, self.rbnClean, self.rbnSetup, self.rbnTools}
+            for btn in btnList1:
+                if btn.text() == changeList[1]:
+                    btn.setChecked(True)
         
 
 
@@ -214,6 +251,7 @@ class AddProg(QtWidgets.QDialog, diaAddProg.Ui_diaAddProg):
         loc = self.tbxLocation.text()
         desc = self.tbxDescription.toPlainText()
         ico = self.tbxItemLocation.text()
+        web = self.tbxURL.text()
         ty = ''
         oss = ''
         tboxes = {self.rbnAntimalware, self.rbnAntivirus, self.rbnClean, self.rbnSetup, self.rbnTools}
@@ -224,8 +262,20 @@ class AddProg(QtWidgets.QDialog, diaAddProg.Ui_diaAddProg):
         for o in oboxes:
             if o.isChecked():
                 oss = o.text()
-        writeTempList('temp.xml', ty, name, desc, loc, ' ', ico)
+        changeList.clear()
+        readProgramList('temp.xml', None, name)
+        if len(changeList) > 0:
+            #dialog("Entry Already Exists Under this name", "Entry Exists")
+            btnQuestion = QtWidgets.QMessageBox.question(self, "Overwrite Entry", "Entry exists, would you like to overwrite?", QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+            if btnQuestion == QtWidgets.QMessageBox.Yes:
+                self.parent.removeEntry(name)
+                dialog("Adding updated item", "Updating")
+                writeTempList('temp.xml', ty, name, desc, loc, web, ico)
+
+        else:
+            writeTempList('temp.xml', ty, name, desc, loc, web, ico)
         self.parent.refreshList()
+
 
 
     def openFileDialog(self, ftype):
@@ -253,35 +303,42 @@ class UtilDialog(QtWidgets.QDialog, utilDialog.Ui_frmUtilities):
         self.btnExit.clicked.connect(self.close)
         self.tbnFrom.clicked.connect(lambda: self.openDirDialog(0))
         self.tbnTo.clicked.connect(lambda: self.openDirDialog(1))
-        #self.btnTest.clicked.connect(self.testCounter)
+        self.tbnDriver.clicked.connect(lambda: self.openDirDialog(2))
+        self.btnTest.clicked.connect(self.testCounter)
 
     def aCheck(self):
         if checkIfAdmin() == False:
             dialog("Best used if Arcadia is run as Administrator", "User Not Administrator")
 
     def winBackup(self, ffold, tfold):
-        #print("Running Backup")
         winstate = int(checkWindows())
         if winstate == 1:
             try:
-                subprocess.Popen(shlex.split('xcopy "{0}" "{1}" /MEGHY'.format(ffold, tfold)))
-                #self.monitorFileMove(process)
-                dialog("Backup Complete.", "Backup Successful")
+                subprocess.Popen('xcopy "{0}" "{1}" /MEGHY'.format(ffold, tfold))
+                self.lblStatus.setText("Status: Backup Complete")
             except subprocess.CalledProcessError as e:
                 self.xcopyWeird(e.returncode)
         elif winstate > 1 and winstate <= 6:
             try:
                 subprocess.Popen('robocopy "{0}" "{1}" /e /z /R:1 /W:1 /xj /xf desktop.ini /MT:8'.format(ffold, tfold))
-                #self.monitorFileMove(process)
-                
-                dialog("Backup Complete.", "Backup Successful")
+                self.lblStatus.setText("Status: Backup Complete")
             except subprocess.CalledProcessError as e:
                 self.roboWeird(e.returncode)
         else:
-            dialog("Unsupported Windows Version", "Unable to Copy")
+            self.lblStatus.setText("Status: Unsupported Windows Version")
         self.tbxFrom.setText("")
         self.tbxTo.setText("")
 
+
+    """
+    UtilDialog::fileCounter()
+    Arguments:
+        folder1: location of files that will be counted
+
+    Description:
+    Goes through a folder and creates a list of the filenames present within. Ignores 'desktop.ini' as that will not be
+    copied over in the file backup process.
+    """
 
     def fileCounter(self, folder1):
         global filelist
@@ -295,46 +352,115 @@ class UtilDialog(QtWidgets.QDialog, utilDialog.Ui_frmUtilities):
 
 
     #def folderCompare(self, folder1, folder2):
-    # def testCounter(self):
-    #     self.fileCounter(self.tbxFrom.text())
-    #     dialog("There are {} files total.".format(len(filelist)), "Total Files")
-    #     print(filelist)
+    def testCounter(self):
+        self.fileCounter(self.tbxFrom.text())
+        dialog("There are {} files total.".format(len(filelist)), "Total Files")
+        print(filelist)
 
+    """
+    UtilDialog::xcopyWeird()
+    Arguments:
+        self: referring back to parent class
+        ec: The thrown return code from xcopy
+    Description:
+    Xcopy throws return codes (picked up as error codes by exception handling) in order to show what happened
+    during file transfer. Once the exceptions are thrown, this list parses it to determine what really happened.
+    """
 
     def xcopyWeird(self, ec):
         if ec == 1:
-            dialog("No files were found to copy.", "Backup Successful")
+            self.dialog("No files were found to copy.", "Backup Successful")
         elif ec == 2:
-            dialog("Xcopy process terminated.", "Backup Terminated")
+            self.dialog("Xcopy process terminated.", "Backup Terminated")
         elif ec == 4:
-            dialog("Not enough memory or disk space.", "Backup Failed")
+            self.dialog("Not enough memory or disk space.", "Backup Failed")
         elif ec == 5:
-            dialog("Disk Write Error Occurred.", "Backup Failed")
+            self.dialog("Disk Write Error Occurred.", "Backup Failed")
 
 
-    def monitorFileMove(self, proc):
-        #stdout = proc.communicate()[0]
-        while True:
-            output = proc.stdout.readline()
-            if output == '' and proc.poll() is not None:
-                break
-            if output:    
-                self.txtInfo.append(output.strip())
-        #print('STDOUT:{}'.format(stdout))
+    """
+    UtilDialog::monitorFileMove()
+    Arguments:
+        self: referring back to parent class
+        loc1: initial 'from' folder location
+        loc2: 'to' folderlocation that will be monitored
+        total: total number of files that should be present in the 'to' folder once completed
+
+    Description:
+    Continuously monitors 'to' folder to see when file transfer has been completed. Takes number of 
+    files in folder and divides by total to find percentage of completion. Uses percentage to
+    update the progress bar (pbrfiles). Function is designed to run in its own thread.
+    """
+
+    def monitorFileMove(self, loc1, loc2, total):
+        x = True
+        while x == True:
+            filelist.clear()
+            self.fileCounter(loc2)
+            now = len(filelist)
+            try:
+                percent = (total / now) * 100
+            except ZeroDivisionError:
+                percent = 0
+            self.lblStatus.setText("Status: {}%".format(percent))
+            self.pbrFiles.setValue(percent)
+            if percent == 100:
+                x = False
+            #time.sleep(.05)
+
+
+
+    """
+    UtilDialog::roboWeird()
+    Arguments:
+        self: referring back to parent class
+        ec: The thrown return code from robocopy
+    Description:
+    Robocopy throws return codes (picked up as error codes by exception handling) in order to show what happened
+    during file transfer. Once the exceptions are thrown, this list parses it to determine what really happened.
+    """
 
     def roboWeird(self, ec):
         if ec == 1:
-            dialog("Backup Completed Successfully", "Backup Successfull")
+            #self.dialog("Backup Completed Successfully", "Backup Successful")
+            self.lblStatus.setText("Status: Backup Completed Successfully")
         elif ec == 2:
-            dialog("Some files were skipped", "Backup Successfull")
+            #self.dialog("Some files were skipped", "Backup Successful")
+            self.lblStatus.setText("Status: Some files were skipped")
         elif ec == 4:
-            dialog("Mismatched files or directories detected. Check manually", "Backup Completed")
+            #self.dialog("Mismatched files or directories detected. Check manually", "Backup Completed")
+            self.lblStatus.setText("Status: Mismatched files or directories detected. Check manually")
         elif ec == 8:
-            dialog("Copy Errors Occurred and retry limit was exceeded. Some files/directories may have not been moved", "Backup May Have Failed")
+            #self.dialog("Copy Errors Occurred and retry limit was exceeded. Some files/directories may have not been moved", "Backup May Have Failed")
+            self.lblStatus.setText("Status: Copy Errors Occurred and retry limit was exceeded")
         elif ec == 16:
-            dialog("Serious Error. No files copied.", "Backup Failed")
+            #self.dialog("Serious Error. No files copied.", "Backup Failed")
+            self.lblStatus.setText("Status: Serious Error. No files copied.")
         else:
-            dialog("Unknown Error.", "Backup Probably Failed")
+            #self.dialog("Unknown Error.", "Backup Probably Failed")
+            self.lblStatus.setText("Status: Unknown Error")
+
+
+    def dialog(self, text, title):
+        msg = QtWidgets.QMessageBox()
+        msg.setIcon(QtWidgets.QMessageBox.Information)
+        msg.setText(text)
+        msg.setWindowTitle(title)
+        msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        msg.exec_()
+
+    """
+    UtilDialog::winDriverBackup()
+    Arguments:
+        self: referring back to parent class
+        tfold: "To Folder", or where the drivers will end up
+        winver: Version of Windows that the process will be running on
+    Description:
+    Determines version of Windows. If Windows version is XP then skips to using xcopy to transfer the files from default
+    locations listed in driverLocations list. If newer than XP (Vista or later) attempts to run powershell commands first
+    for easier backup. If that fails it proceeds to use robocopy on the driverLocations.
+    """
+
 
     def winDriverBackup(self, tfold, winver):
         driverLocations = ["%SystemRoot%\\Driver Cache\\i386\\drivers.cab", "%SystemRoot%\\Driver Cache\\i386\\service_pack.cab", "%windir%\\inf", "%SystemRoot%\\System32\\Drivers", "%SystemRoot%\\System32"]
@@ -355,7 +481,18 @@ class UtilDialog(QtWidgets.QDialog, utilDialog.Ui_frmUtilities):
                     subprocess.check_output('xcopy "{0}" "{1}" /MEGHY'.format(item, tfold))
                 except subprocess.CalledProcessError as e:
                     self.xcopyWeird(e.returncode)
-            
+
+    """
+    UtilDialog::openDirDialog()
+    Arguments:
+        self: referring back to parent class
+        ftype: Determining which button was pressed (tbnFrom or tbnTo)
+    Description:
+    Opens a QFileDialog so that the user can select directories for the "From" and "To" locations for the
+    file backup. tbxFrom or tbxTo are then populated based on the result.
+    """
+
+
     def openDirDialog(self, ftype):
         d = QtWidgets.QFileDialog.getExistingDirectory(self, "Select a Directory", os.path.expanduser('~'))
         if ftype == 0:
@@ -364,17 +501,59 @@ class UtilDialog(QtWidgets.QDialog, utilDialog.Ui_frmUtilities):
         elif ftype == 1:
             if d != '':
                 self.tbxTo.setText(d)
+        elif ftype == 2:
+            if d != '':
+                self.tbxDriver.setText(d)
         else:
             print("Hello World")
+
+
+
+    """
+    UtilDialog::runBackup()
+    Arguments:
+        self: referring back to parent class
+    Description:
+    Makes sure that tbxFrom and tbxTo listboxes in UtilDialog are populated.
+    Determines which operating system is being run.
+    Runs backup function based upon current operating system.
+    """
+
 
     def runBackup(self):
         ff = self.tbxFrom.text()
         tf = self.tbxTo.text()
         if ff != "" and ff != None and tf != '' and tf != None:
             if sys.platform == 'win32':
-                self.winBackup(ff, tf)
+                filelist.clear()
+                self.fileCounter(ff)
+                inisize = len(filelist)
+                filelist.clear()
+                self.fileCounter(tf)
+                fromsize = len(filelist)
+                newtotal = inisize + fromsize
+                t = threading.Thread(target=lambda: self.winBackup(ff, tf))
+                t2 = threading.Thread(target=lambda: self.monitorFileMove(ff, tf, newtotal))
+                t.daemon = True
+                t2.daemon = True
+                t.start()
+                t2.start()
+                t.join()
+                t2.join()
             else:
                 print("Not currently supported")
+
+    """
+    UtilDialog::runDriverBackup()
+    Arguments:
+        self: referring back to parent class
+    
+    Description:
+    Determines which version of Windows is being run.
+    Makes sure that the tbxDriver listbox in the Utiliy dialog is populated.
+    Runs function to back up drivers from Windows system files.
+
+    """
 
     def runDriverBackup(self):
         tf = self.tbxDriver.text()
@@ -411,22 +590,34 @@ and populates the qlistbox widget with the names taken from xml file based on ap
 """
 
 
-def readProgramList(fileLoc, biglist):
+def readProgramList(fileLoc, biglist=None, name=""):
     root = ET.parse(fileLoc).getroot()
-    for item in root.findall('Item'):
-        if item.get('cat') == 'Antivirus':
-            biglist[0].append(item.get('name'))
-        elif item.get('cat') == 'Antimalware':
-            biglist[1].append(item.get('name'))
-        elif item.get('cat') == 'Clean':
-            biglist[2].append(item.get('name'))
-        elif item.get('cat') == 'Setup':
-            biglist[3].append(item.get('name'))
-        elif item.get('cat') == 'Tools':
-            biglist[4].append(item.get('name'))
+    for item in root.findall('ns1:Item', namespace):
+        if name == "" and biglist != None:
+            if item.get('cat') == 'Antivirus':
+                biglist[0].append(item.get('name'))
+            elif item.get('cat') == 'Antimalware':
+                biglist[1].append(item.get('name'))
+            elif item.get('cat') == 'Clean':
+                biglist[2].append(item.get('name'))
+            elif item.get('cat') == 'Setup':
+                biglist[3].append(item.get('name'))
+            elif item.get('cat') == 'Tools':
+                biglist[4].append(item.get('name'))
 
-        for cat in biglist:
-            cat.sort()
+            for cat in biglist:
+                cat.sort()
+        else:
+            if item.get('name') == name:
+                changeList.append(name)
+                changeList.append(item.get('cat'))
+                changeList.append(item.find('ns1:Description', namespace).text)
+                changeList.append(item.find('ns1:Location', namespace).text)
+                changeList.append(item.find('ns1:Link', namespace).text)
+                changeList.append(item.find('ns1:Icon', namespace).text)
+            #changelist[0] = name, [1] = category, [2] = Description, [3] = Location
+            #[4] = Link, [5] = Icon
+                
 
     
 """
@@ -508,11 +699,11 @@ program.xml file.
 def writeTempList(fileLoc, cat, name, des, loc, link, icon):
     tree = ET.parse(fileLoc)
     root = tree.getroot()
-    new_item = ET.SubElement(root, 'Item', attrib={"cat": cat, "name": name})
-    new_item_des = ET.SubElement(new_item, 'Description')
-    new_item_loc = ET.SubElement(new_item, 'Location')
-    new_item_link = ET.SubElement(new_item, 'Link')
-    new_item_icon = ET.SubElement(new_item, 'Icon')
+    new_item = ET.SubElement(root, 'ns0:Item', attrib={"cat": cat, "name": name})
+    new_item_des = ET.SubElement(new_item, 'ns0:Description')
+    new_item_loc = ET.SubElement(new_item, 'ns0:Location')
+    new_item_link = ET.SubElement(new_item, 'ns0:Link')
+    new_item_icon = ET.SubElement(new_item, 'ns0:Icon')
 
     new_item_des.text = des
     new_item_loc.text = loc
@@ -562,10 +753,8 @@ def dialog(text, title):
 runProgram()
 Arguments: None
 Description:
-Runs program determined by 'selectedLocation' global variable. Currently using subprocess.call([selectedLocation])
-to run the program, but having trouble when running through visual studio code with anaconda as the subprocess
-opens in a separate directory from the program file location. Using a specific location may be necessary, but would
-require users to place all programs in a specific location. Working on a solution.
+Runs program determined by 'selectedLocation' global variable. Currently using subprocess.call([sys.path[0] + / + selectedlocation])
+
 
 """
 
@@ -573,11 +762,9 @@ require users to place all programs in a specific location. Working on a solutio
 def runProgram():
     try:
         if selectedLocation is not '':
-            #os.system(selectedLocation)
-            #subprocess is opening in appdata directory. May need to fix.
-            #home = os.path.expanduser('~')
-            #subprocess.Popen(["{0}\\Documents\\Arcadia 6\\{1}".format(home, selectedLocation)])
-            subprocess.call([selectedLocation])
+    
+            subprocess.call([sys.path[0] + "/" + selectedLocation])
+    
     except:
         dialog("Program Not Found at {}".format(selectedLocation), "Error") 
 
@@ -587,6 +774,10 @@ mainList = list((list(), list(), list(), list(), list()))
 tempList = list((list(), list(), list(), list(), list()))
 
 filelist = list()
+
+namespace = {"ns1": "http://harlocktech.com/Arcadia6"}
+#hold program information for the Program Editor change function
+changeList = list()
 
 if __name__ == '__main__':
 

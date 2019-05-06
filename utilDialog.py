@@ -48,6 +48,10 @@ class Ui_frmUtilities(object):
         self.pbrFiles.setGeometry(QtCore.QRect(40, 270, 411, 23))
         self.pbrFiles.setProperty("value", 0)
         self.pbrFiles.setObjectName("pbrFiles")
+        self.lblStatus = QtWidgets.QLabel(frmUtilities)
+        self.lblStatus.setGeometry(QtCore.QRect(46, 250, 371, 20))
+        self.lblStatus.setAlignment(QtCore.Qt.AlignCenter)
+        self.lblStatus.setObjectName("lblStatus")
 
         self.retranslateUi(frmUtilities)
         QtCore.QMetaObject.connectSlotsByName(frmUtilities)
@@ -65,4 +69,5 @@ class Ui_frmUtilities(object):
         self.tbnDriver.setText(_translate("frmUtilities", "..."))
         self.btnDriver.setText(_translate("frmUtilities", "Driver Backup"))
         self.btnTest.setText(_translate("frmUtilities", "test"))
+        self.lblStatus.setText(_translate("frmUtilities", "Status: "))
 

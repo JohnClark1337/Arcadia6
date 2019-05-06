@@ -11,12 +11,12 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_diaAddProg(object):
     def setupUi(self, diaAddProg):
         diaAddProg.setObjectName("diaAddProg")
-        diaAddProg.resize(475, 276)
+        diaAddProg.resize(475, 325)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("Icons/Arcadia.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         diaAddProg.setWindowIcon(icon)
         self.buttonBox = QtWidgets.QDialogButtonBox(diaAddProg)
-        self.buttonBox.setGeometry(QtCore.QRect(30, 240, 341, 32))
+        self.buttonBox.setGeometry(QtCore.QRect(40, 270, 341, 32))
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
@@ -41,7 +41,7 @@ class Ui_diaAddProg(object):
         self.tbxItemLocation.setClearButtonEnabled(False)
         self.tbxItemLocation.setObjectName("tbxItemLocation")
         self.iconView = QtWidgets.QLabel(diaAddProg)
-        self.iconView.setGeometry(QtCore.QRect(140, 210, 41, 41))
+        self.iconView.setGeometry(QtCore.QRect(140, 200, 41, 41))
         self.iconView.setObjectName("iconView")
         self.gbxType = QtWidgets.QGroupBox(diaAddProg)
         self.gbxType.setGeometry(QtCore.QRect(380, 10, 91, 251))
@@ -75,6 +75,9 @@ class Ui_diaAddProg(object):
         self.rbnLinux = QtWidgets.QRadioButton(self.gbxOS)
         self.rbnLinux.setGeometry(QtCore.QRect(220, 20, 51, 17))
         self.rbnLinux.setObjectName("rbnLinux")
+        self.tbxURL = QtWidgets.QLineEdit(diaAddProg)
+        self.tbxURL.setGeometry(QtCore.QRect(62, 240, 281, 20))
+        self.tbxURL.setObjectName("tbxURL")
 
         self.retranslateUi(diaAddProg)
         self.buttonBox.accepted.connect(diaAddProg.accept)
@@ -101,4 +104,5 @@ class Ui_diaAddProg(object):
         self.rbnWindows.setText(_translate("diaAddProg", "Windows"))
         self.rbnMac.setText(_translate("diaAddProg", "Mac OS"))
         self.rbnLinux.setText(_translate("diaAddProg", "Linux"))
+        self.tbxURL.setPlaceholderText(_translate("diaAddProg", "URL"))
 
