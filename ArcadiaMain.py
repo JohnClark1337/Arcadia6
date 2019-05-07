@@ -164,6 +164,8 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
             self.lblLeftArrow.show()
             self.lblModDiff.show()
             self.lblRightArrow.show()
+            self.lblCurrentDiff.setText('0')
+            self.lblModDiff.setText('0')
             longmain = list()
             longtemp = list()
             mint = 0
@@ -208,13 +210,13 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
     def populateList(self, wid, biglist):
         wid.addItem("Antivirus:\n")
         wid.addItems(biglist[0])
-        wid.addItem("\nAntimalware:\n")
+        wid.addItem("\n\nAntimalware:\n")
         wid.addItems(biglist[1])
-        wid.addItem("\nCleaning Tools:\n")
+        wid.addItem("\n\nCleaning Tools:\n")
         wid.addItems(biglist[2])
-        wid.addItem("\nSetup Tools:\n")
+        wid.addItem("\n\nSetup Tools:\n")
         wid.addItems(biglist[3])
-        wid.addItem("\nRandom Tools:\n")
+        wid.addItem("\n\nRandom Tools:\n")
         wid.addItems(biglist[4])
 
     def refreshList(self):
@@ -223,6 +225,8 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
             item.clear()
         readProgramList('temp.xml', tempList)
         self.populateList(self.lstMod, tempList)
+        if self.chkChanges.isChecked() == True:
+            self.showDiffs(QtCore.Qt.Checked)
         
 
 class AddProg(QtWidgets.QDialog, diaAddProg.Ui_diaAddProg):
@@ -281,13 +285,13 @@ class AddProg(QtWidgets.QDialog, diaAddProg.Ui_diaAddProg):
     def openFileDialog(self, ftype):
         if ftype == 0:
             d = QtWidgets.QFileDialog.getOpenFileName(
-            self, "Select File", os.path.expanduser('~'),
+            self, "Select File", '',
             filter=('Windows Executable (*.exe);;Microsoft Installer (*.msi)'))[0]
             if d != '':
                 self.tbxLocation.setText(d)
         else:
             d = QtWidgets.QFileDialog.getOpenFileName(
-            self, "Select File", os.path.expanduser('~'),
+            self, "Select File", '',
             filter=('PNG File (*.png);;JPEG/JPG (*.jpeg *.jpg)'))[0]
             if d != '':
                 self.tbxItemLocation.setText(d)
@@ -306,9 +310,33 @@ class UtilDialog(QtWidgets.QDialog, utilDialog.Ui_frmUtilities):
         self.tbnDriver.clicked.connect(lambda: self.openDirDialog(2))
         self.btnTest.clicked.connect(self.testCounter)
 
+
+    """
+    UtilDialog:aCheck()
+    Arguments:
+        self: referring back to parent class
+    Description:
+    Checks if the user has administrative privilages.
+    """
+
+
     def aCheck(self):
         if checkIfAdmin() == False:
             dialog("Best used if Arcadia is run as Administrator", "User Not Administrator")
+
+
+    """
+    UtilDialog:WinBackup()
+    Arguments:
+        self: referring back to parent class
+        ffold: From Folder, folder where the files to be moved are located
+        tfold: To folder, folder where you want the files moved
+    Description:
+    Determines which version of Windows is being used and runs copy commands based on the OS.
+    Windows XP uses XCopy, as robocopy is not installed by default. Newer versions of Windows
+    use Robocopy. Windows operating systems older than XP are not supported.
+    """
+
 
     def winBackup(self, ffold, tfold):
         winstate = int(checkWindows())
@@ -333,6 +361,7 @@ class UtilDialog(QtWidgets.QDialog, utilDialog.Ui_frmUtilities):
     """
     UtilDialog::fileCounter()
     Arguments:
+        self: referring back to parent class
         folder1: location of files that will be counted
 
     Description:
@@ -422,32 +451,18 @@ class UtilDialog(QtWidgets.QDialog, utilDialog.Ui_frmUtilities):
 
     def roboWeird(self, ec):
         if ec == 1:
-            #self.dialog("Backup Completed Successfully", "Backup Successful")
             self.lblStatus.setText("Status: Backup Completed Successfully")
         elif ec == 2:
-            #self.dialog("Some files were skipped", "Backup Successful")
             self.lblStatus.setText("Status: Some files were skipped")
         elif ec == 4:
-            #self.dialog("Mismatched files or directories detected. Check manually", "Backup Completed")
             self.lblStatus.setText("Status: Mismatched files or directories detected. Check manually")
         elif ec == 8:
-            #self.dialog("Copy Errors Occurred and retry limit was exceeded. Some files/directories may have not been moved", "Backup May Have Failed")
             self.lblStatus.setText("Status: Copy Errors Occurred and retry limit was exceeded")
         elif ec == 16:
-            #self.dialog("Serious Error. No files copied.", "Backup Failed")
             self.lblStatus.setText("Status: Serious Error. No files copied.")
         else:
-            #self.dialog("Unknown Error.", "Backup Probably Failed")
             self.lblStatus.setText("Status: Unknown Error")
 
-
-    def dialog(self, text, title):
-        msg = QtWidgets.QMessageBox()
-        msg.setIcon(QtWidgets.QMessageBox.Information)
-        msg.setText(text)
-        msg.setWindowTitle(title)
-        msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
-        msg.exec_()
 
     """
     UtilDialog::winDriverBackup()
