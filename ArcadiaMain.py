@@ -13,6 +13,7 @@ import Arcadia6
 import progEditor
 import diaAddProg
 import utilDialog
+import importDialog
 
 class ArcadiaPy(QtWidgets.QMainWindow, Arcadia6.Ui_MainWindow):
     def __init__(self, parent=None):
@@ -112,12 +113,12 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
         self.btnAdd.clicked.connect(self.addEntry)
         self.actionClose.triggered.connect(self.close)
         self.btnExit.clicked.connect(self.close)
-        self.btnRefresh.clicked.connect(self.refreshList)
         clearTempList()
         copyfile('Programs.xml', 'temp.xml')
         readProgramList('temp.xml', tempList)
         self.populateList(self.lstMod, tempList)
         self.btnChange.clicked.connect(self.changeEntry)
+        self.btnImport.clicked.connect(self.impApps)
 
 
     def addEntry(self):
@@ -126,6 +127,11 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
         addDia.show()
         self.refreshList()
 
+    def impApps(self):
+        btnQuestion = QtWidgets.QMessageBox.question(self, "Proceed to Import", "This will remove unsaved changes. Continue?", QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+        if btnQuestion == QtWidgets.QMessageBox.Yes:
+            iDia = ImpDialog(self)
+            iDia.show()
     
     def changeEntry(self):
         changeList.clear()
@@ -227,6 +233,8 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
         self.populateList(self.lstMod, tempList)
         if self.chkChanges.isChecked() == True:
             self.showDiffs(QtCore.Qt.Checked)
+
+    
         
 
 class AddProg(QtWidgets.QDialog, diaAddProg.Ui_diaAddProg):
@@ -295,6 +303,35 @@ class AddProg(QtWidgets.QDialog, diaAddProg.Ui_diaAddProg):
             filter=('PNG File (*.png);;JPEG/JPG (*.jpeg *.jpg)'))[0]
             if d != '':
                 self.tbxItemLocation.setText(d)
+
+
+class ImpDialog(QtWidgets.QMainWindow, importDialog.Ui_frmImport):
+    def __init__(self, parent=None):
+        super(ImpDialog, self).__init__(parent)
+        self.setupUi(self)
+        self.parent = parent
+        clearTempList()
+        copyfile('Programs.xml', 'temp.xml')
+        readProgramList('temp.xml', tempList)
+        self.txtInstructions.setText(self.instuctions)
+        self.btnExit.clicked.connect(self.close)
+        self.tbnImFolder.clicked.connect(self.openDirDialog)
+        self.btnImport.clicked.connect(self.importEverything)
+
+    
+    instuctions = ("This is for importing many applications at once. Make sure that the "
+                   "file structure is as follows:\n-Parent\n---Type(Antivirus, Antimalware, Clean, Setup, Tools)\n-----Files\n\nImport the parent directory. Not all "
+                   "subdirectories are necessary, but the structure is.")
+    
+    def openDirDialog(self):
+        d = QtWidgets.QFileDialog.getExistingDirectory(self, "Select a Directory", '')
+        self.tbxImFolder.setText(d)
+    
+    def importEverything(self):
+        for item in tempList:
+            for x in item:
+                print(x)
+
 
 class UtilDialog(QtWidgets.QDialog, utilDialog.Ui_frmUtilities):
     def __init__(self, parent=None):
@@ -583,7 +620,6 @@ class UtilDialog(QtWidgets.QDialog, utilDialog.Ui_frmUtilities):
                 else:
                     dialog("Unknown version of Windows", "Unable to Backup Drivers")
                 self.winDriverBackup(tf, winstate)
-
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
