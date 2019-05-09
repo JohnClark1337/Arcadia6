@@ -12,6 +12,8 @@ class Ui_diaAddProg(object):
     def setupUi(self, diaAddProg):
         diaAddProg.setObjectName("diaAddProg")
         diaAddProg.resize(475, 325)
+        diaAddProg.setMinimumSize(QtCore.QSize(475, 325))
+        diaAddProg.setMaximumSize(QtCore.QSize(475, 325))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("Icons/Arcadia.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         diaAddProg.setWindowIcon(icon)

@@ -119,8 +119,19 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
         self.populateList(self.lstMod, tempList)
         self.btnChange.clicked.connect(self.changeEntry)
         self.btnImport.clicked.connect(self.impApps)
+        self.btnBackup.clicked.connect(self.mainBackup)
+        self.btnLoad.clicked.connect(self.loadList)
+        self.btnReset.clicked.connect(self.resetList)
 
+    
+    def resetList(self):
+        clearTempList()
+        copyfile('Programs.xml', 'temp.xml')
+        readProgramList('temp.xml', tempList)
+        self.refreshList()
+        
 
+    
     def addEntry(self):
         changeList.clear()
         addDia = AddProg(self)
@@ -133,6 +144,19 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
             iDia = ImpDialog(self)
             iDia.show()
     
+    def loadList(self):
+        btnQuestion = QtWidgets.QMessageBox.question(self, "Proceed to Load", "This will remove unsaved changes. Continue?", QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+        if btnQuestion == QtWidgets.QMessageBox.Yes:
+            bac = QtWidgets.QFileDialog.getOpenFileName(self, "Load Existing List", "", "XML File (*.xml)")
+            if bac[0] != "":
+                try:
+                    copyfile(bac[0], "temp.xml")
+                except:
+                    dialog("Unable to import file. Closing Editor.", "Unable to Import")
+                    self.close()
+                clearTempList()
+                readProgramList('temp.xml', tempList)
+
     def changeEntry(self):
         changeList.clear()
         cname = self.lstMod.selectedItems()
@@ -157,13 +181,18 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
 
         for item in root:
             if item.attrib["name"] == name:
-                dialog("Removing {}".format(item.attrib['name']), "Removing Item")
-                root.remove(item)
+                btnQuestion = QtWidgets.QMessageBox.question(self, "Removing Program", "This will remove the program. Continue?", QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+                if btnQuestion == QtWidgets.QMessageBox.Yes:
+                    root.remove(item)
 
         tree.write("temp.xml")  
         self.refreshList()
 
     
+    def mainBackup(self):
+        bac = QtWidgets.QFileDialog.getSaveFileName(self, "Backup Program List", "", "XML File (*.xml)")
+        copyfile('Programs.xml', bac[0])
+
     def showDiffs(self, state):
         if state == QtCore.Qt.Checked:
             self.lblCurrentDiff.show()
@@ -211,6 +240,7 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
                 it = w1.findItems(prog, QtCore.Qt.MatchExactly)
                 if len(it) == 0:
                     w2.findItems(prog, QtCore.Qt.MatchExactly)[0].setBackground(QtGui.QBrush(c, QtCore.Qt.SolidPattern))
+                
 
 
     def populateList(self, wid, biglist):
@@ -257,6 +287,15 @@ class AddProg(QtWidgets.QDialog, diaAddProg.Ui_diaAddProg):
                     btn.setChecked(True)
         
 
+    """
+    AddProg::addProgramInfo()
+    Arguments:
+        self: referring back to parent class
+    Description:
+    Gets information from the AddProg form and uses it to create a new entry in the temporary
+    xml file. It also checks to make sure the program does not already exist on the list.
+    """
+
 
     def addProgramInfo(self):
         name = self.tbxName.text()
@@ -264,8 +303,11 @@ class AddProg(QtWidgets.QDialog, diaAddProg.Ui_diaAddProg):
         desc = self.tbxDescription.toPlainText()
         ico = self.tbxItemLocation.text()
         web = self.tbxURL.text()
+        rname =''
         ty = ''
         oss = ''
+        #Message for checking if item already exists
+        message = 'Name Exists Already'
         tboxes = {self.rbnAntimalware, self.rbnAntivirus, self.rbnClean, self.rbnSetup, self.rbnTools}
         for t in tboxes:
             if t.isChecked():
@@ -275,12 +317,21 @@ class AddProg(QtWidgets.QDialog, diaAddProg.Ui_diaAddProg):
             if o.isChecked():
                 oss = o.text()
         changeList.clear()
+        readProgramList('temp.xml', None, loc)
+        #if location exists already set it for possible deletion
+        if len(changeList) > 0:
+            rname = changeList[0]
+            message = "Location Exists Already"
+            #if name exists also then same entry
+            if rname == name:
+                message = "Entry Exists Already"
+        else:
+            rname = name
         readProgramList('temp.xml', None, name)
         if len(changeList) > 0:
-            #dialog("Entry Already Exists Under this name", "Entry Exists")
-            btnQuestion = QtWidgets.QMessageBox.question(self, "Overwrite Entry", "Entry exists, would you like to overwrite?", QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+            btnQuestion = QtWidgets.QMessageBox.question(self, "Overwrite Entry", "{}, would you like to overwrite?".format(message), QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
             if btnQuestion == QtWidgets.QMessageBox.Yes:
-                self.parent.removeEntry(name)
+                self.parent.removeEntry(rname)
                 dialog("Adding updated item", "Updating")
                 writeTempList('temp.xml', ty, name, desc, loc, web, ico)
 
@@ -288,6 +339,17 @@ class AddProg(QtWidgets.QDialog, diaAddProg.Ui_diaAddProg):
             writeTempList('temp.xml', ty, name, desc, loc, web, ico)
         self.parent.refreshList()
 
+
+    """
+    AddProg::openFileDialog()
+    Arguments:
+        self: referring back to parent class
+        ftype: determining which dialog to show
+    Description:
+    Opens dialog for finding a file depending on which button is clicked (tbnLocation or 
+    tbnItemLocation) and determines where to put the resulting url (tbxlocation or 
+    tbxItemLocation).
+    """
 
 
     def openFileDialog(self, ftype):
@@ -304,6 +366,17 @@ class AddProg(QtWidgets.QDialog, diaAddProg.Ui_diaAddProg):
             if d != '':
                 self.tbxItemLocation.setText(d)
 
+"""
+ImpDialog()
+Arguments:
+    Dialog Definitions
+Description:
+Enables user to easily import folder filled with executables to populate the tools list
+in Arcadia 6. Files need to be organzied by type (Antivirus, Antimalware, Clean, Setup, Tools)
+in subfolders of those names within the primary folder. User will have the option to append
+the existing application list, or overwrite the existing list. 
+"""
+
 
 class ImpDialog(QtWidgets.QMainWindow, importDialog.Ui_frmImport):
     def __init__(self, parent=None):
@@ -318,19 +391,51 @@ class ImpDialog(QtWidgets.QMainWindow, importDialog.Ui_frmImport):
         self.tbnImFolder.clicked.connect(self.openDirDialog)
         self.btnImport.clicked.connect(self.importEverything)
 
-    
+    #instructions for how to import. Stored here and presented in txtInstructions box
     instuctions = ("This is for importing many applications at once. Make sure that the "
                    "file structure is as follows:\n-Parent\n---Type(Antivirus, Antimalware, Clean, Setup, Tools)\n-----Files\n\nImport the parent directory. Not all "
                    "subdirectories are necessary, but the structure is.")
     
+
+    """
+    ImpDialog:openDirDialog()
+    Arguments:
+        self: referring back to parent class
+    Description:
+    Opens dialog for finding folder to import from.
+    """
+
+
     def openDirDialog(self):
         d = QtWidgets.QFileDialog.getExistingDirectory(self, "Select a Directory", '')
         self.tbxImFolder.setText(d)
     
+
+    """
+    ImpDialog:importEverything()
+    Arguments:
+        self: referring back to parent class
+    Description:
+    Code for importing folders full of application executables. Creating an xml file
+    with the information about the applications, allowing the applications to be organized
+    and run from Arcadia 6.
+    """
+
     def importEverything(self):
         for item in tempList:
             for x in item:
                 print(x)
+
+
+"""
+UtilDialog()
+Arguments:
+    Dialog Defintions
+Description:
+Utilities that users may find useful. So far contains file backup (using robocopy, xcopy
+or rsync depending on OS) and driver backup(for Windows operating systems XP+)
+"""
+
 
 
 class UtilDialog(QtWidgets.QDialog, utilDialog.Ui_frmUtilities):
@@ -641,10 +746,10 @@ and populates the qlistbox widget with the names taken from xml file based on ap
 """
 
 
-def readProgramList(fileLoc, biglist=None, name=""):
+def readProgramList(fileLoc, biglist=None, search=""):
     root = ET.parse(fileLoc).getroot()
     for item in root.findall('ns1:Item', namespace):
-        if name == "" and biglist != None:
+        if search == "" and biglist != None:
             if item.get('cat') == 'Antivirus':
                 biglist[0].append(item.get('name'))
             elif item.get('cat') == 'Antimalware':
@@ -659,8 +764,8 @@ def readProgramList(fileLoc, biglist=None, name=""):
             for cat in biglist:
                 cat.sort()
         else:
-            if item.get('name') == name:
-                changeList.append(name)
+            if item.get('name') == search or item.find('ns1:Location', namespace).text == search:
+                changeList.append(item.get('name'))
                 changeList.append(item.get('cat'))
                 changeList.append(item.find('ns1:Description', namespace).text)
                 changeList.append(item.find('ns1:Location', namespace).text)

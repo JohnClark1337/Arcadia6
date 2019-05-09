@@ -1,0 +1,495 @@
+<?xml version="1.0" ?>
+
+<Programs
+xmlns="http://harlocktech.com/Arcadia6"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://harlocktech.com/Arcadia6 programschema.xsd">
+	<Item cat="Antivirus" name="Avira">
+		<Description>Good free antivirus</Description>
+		<Location>Programs\Antivirus\avira.exe</Location>
+		<Link>www.avira.com</Link>
+		<Icon>Icons/avira.png</Icon>
+	</Item>
+	<Item cat="Antivirus" name="AVG">
+		<Description>Good free antivirus</Description>
+		<Location>Programs\Antivirus\avg.exe</Location>
+		<Link>www.avg.com</Link>
+		<Icon>Icons/AVG.png</Icon>
+	</Item>
+	<Item cat="Antivirus" name="Voodoo Shield">
+		<Description>VoodooShield is a security program that is unlike most traditional anti-virus programs. Instead of scanning your computer for known malware or using definition files to detect infections, VoodooShield instead locks your computer so that you are notified when an unknown process is started.</Description>
+		<Location>Programs\Antivirus\InstallVoodooShield.exe</Location>
+		<Link>https://voodooshield.com/</Link>
+		<Icon>Icons/voodoo.jpg</Icon>
+	</Item>
+	<Item cat="Antivirus" name="Malwarebytes Anti-Rootkit">
+		<Description>Malwarebytes Anti-Rootkit is a free program that can be used to search for and remove rootkits from your computer.</Description>
+		<Location>Programs\Antivirus\mbar.exe</Location>
+		<Link>https://www.malwarebytes.com/antirootkit/</Link>
+		<Icon>Icons/mbar.jpg</Icon>
+	</Item>
+	<Item cat="Antivirus" name="Microsoft Security Essentials x86">
+		<Description>If you’re looking to protect a PC with an older version of running Windows 7, you can use Microsoft Security Essentials to provide comprehensive malware protection that will help guard against viruses, spyware, and other malicious software.</Description>
+		<Location>Programs\Antivirus\mseinstall.exe</Location>
+		<Link>https://support.microsoft.com/en-us/help/14210/security-essentials-download</Link>
+		<Icon>Icons/mse.jpg</Icon>
+	</Item>
+	<Item cat="Antivirus" name="Microsoft Security Essentials x64">
+		<Description>If you’re looking to protect a PC with an older version of running Windows 7, you can use Microsoft Security Essentials to provide comprehensive malware protection that will help guard against viruses, spyware, and other malicious software.</Description>
+		<Location>Programs\Antivirus\mseinstallx64.exe</Location>
+		<Link>https://support.microsoft.com/en-us/help/14210/security-essentials-download</Link>
+		<Icon>Icons/mse.jpg</Icon>
+	</Item>
+	<Item cat="Antivirus" name="REM-VBSworm">
+		<Description>Rem-VBSworm is a utility that removes VBS and Windows Script Host malware from your computer, USB drives, and the network.</Description>
+		<Location>Programs\Antivirus\Rem-VBSworm.exe</Location>
+		<Link>https://www.bleepingcomputer.com/download/rem-vbsworm/</Link>
+		<Icon>Icons/remvbs.png</Icon>
+	</Item>
+	<Item cat="Antivirus" name="Sophos">
+		<Description>Sophos Virus Removal Tool Detects and Removes Computer Threats Including Malware, Viruses, Ransomware, Worms, Trojans and Rootkits.</Description>
+		<Location>Programs\Antivirus\Sophos.exe</Location>
+		<Link>https://www.sophos.com/en-us/products/free-tools/virus-removal-tool.aspx</Link>
+		<Icon>Icons/sophos.png</Icon>
+	</Item>
+	<Item cat="Antivirus" name="TDSSKiller">
+		<Description>TDSSKiller is a utility created by Kaspersky Labs that is designed to remove the TDSS rootkit.</Description>
+		<Location>Programs\Antivirus\tdsskiller.exe</Location>
+		<Link>https://support.kaspersky.com/viruses/disinfection/5350</Link>
+		<Icon>Icons/tdsskiller.jpg</Icon>
+	</Item>
+	<Item cat="Antivirus" name="VIPRE Rescue">
+		<Description>VIPRE Rescue is a handy, easy to use tool designed to clean your computer if you are already infected with a virus and your operating system is not working properly as a result of the infection.</Description>
+		<Location>Programs\Antivirus\VIPRERescue.exe</Location>
+		<Link>https://www.vipreantivirus.com/vipre-rescue-virus-removal-tool.aspx</Link>
+		<Icon>Icons/wheel.jpg</Icon>
+	</Item>
+	<Item cat="Antivirus" name="Zemana">
+		<Description>Zemana AntiMalware is a cloud based malware scanner that provides excellent malware detection, quick scans, and easy malware removal.</Description>
+		<Location>Programs\Antivirus\Zemana.exe</Location>
+		<Link>https://www.zemana.com/en-US</Link>
+		<Icon>Icons/zemana.png</Icon>
+	</Item>
+	<Item cat="Antivirus" name="Clamwin">
+		<Description>ClamWin is a Free Antivirus program for Microsoft Windows 10 / 8 / 7 / Vista / XP / Me / 2000 / 98 and Windows Server 2012, 2008 and 2003.</Description>
+		<Location>Programs\Antivirus\clamwin\ClamWinPortable\ClamWinPortable.exe</Location>
+		<Link>http://www.clamwin.com/</Link>
+		<Icon>Icons/clamwin_logo.png</Icon>
+	</Item>
+	<Item cat="Antivirus" name="Scancl">
+		<Description>Avira Command Line Scanner</Description>
+		<Location>Programs\Antivirus\scancl\scancl.exe</Location>
+		<Link>https://www.avira.com/en/download/product/avira-command-line-scanner-scancl</Link>
+		<Icon>Icons/avira.png</Icon>
+	</Item>
+	
+	<Item cat="Antimalware" name="AdwCleaner">
+		<Description>AdwCleaner is a program that searches for and deletes Adware, Toolbars, Potentially Unwanted Programs (PUP), and browser Hijackers from your computer.</Description>
+		<Location>Programs\Antimalware\AdwCleaner.exe</Location>
+		<Link>https://www.malwarebytes.com/adwcleaner/</Link>
+		<Icon>Icons/AdwCleaner.jpg</Icon>
+	</Item>
+	<Item cat="Antimalware" name="Emsisoft Emergency Kit">
+		<Description>Emsisoft Emergency Kit is a collection of standalone security programs and scanners that can be run from a USB key, bootable CD/DVD, or from within Windows Safe Mode without having to download and install a full security product.  </Description>
+		<Location>Programs\Antimalware\EmsisoftEmergencyKit.exe</Location>
+		<Link>https://www.emsisoft.com/en/software/eek/</Link>
+		<Icon>Icons/EEK.jpg</Icon>
+	</Item>
+	<Item cat="Antimalware" name="HitmanPro">
+		<Description>HitmanPro is an anti-virus program that describes itself as a second opinion scanner that should be used in conjunction with another anti-virus program that you may already have installed.</Description>
+		<Location>Programs\Antimalware\HitmanPro.exe</Location>
+		<Link>https://www.hitmanpro.com/en-us/hmp.aspx</Link>
+		<Icon>Icons/HitmanPro.jpg</Icon>
+	</Item>
+	<Item cat="Antimalware" name="HitmanPro x64">
+		<Description>HitmanPro is an anti-virus program that describes itself as a second opinion scanner that should be used in conjunction with another anti-virus program that you may already have installed.</Description>
+		<Location>Programs\Antimalware\HitmanPro_x64.exe</Location>
+		<Link>https://www.hitmanpro.com/en-us/hmp.aspx</Link>
+		<Icon>Icons/HitmanPro.jpg</Icon>
+	</Item>
+	<Item cat="Antimalware" name="Junk Removal Tool">
+		<Description>Junkware Removal Tool is a security utility that searches for and removes common adware, toolbars, and potentially unwanted programs (PUPs)</Description>
+		<Location>Programs\Antimalware\JRT.exe</Location>
+		<Link>https://www.malwarebytes.com/junkwareremovaltool/</Link>
+		<Icon>Icons/JRT.png</Icon>
+	</Item>
+	<Item cat="Antimalware" name="Malwarebytes Antimalware">
+		<Description>Malwarebytes protects you against malware, ransomware, and other advanced online threats that have made antivirus obsolete and ineffective.</Description>
+		<Location>Programs\Antimalware\mb3.exe</Location>
+		<Link>https://www.malwarebytes.com/</Link>
+		<Icon>Icons/MB.jpg</Icon>
+	</Item>
+	<Item cat="Antimalware" name="RogueKiller">
+		<Description>RogueKiller is an anti-malware able to detect and remove generic malware and advanced threats like rootkits, rogues, worms.</Description>
+		<Location>Programs\Antimalware\RogueKiller.exe</Location>
+		<Link>http://www.adlice.com/download/roguekiller</Link>
+		<Icon>Icons/RogueKiller.jpg</Icon>
+	</Item>
+	<Item cat="Antimalware" name="RogueKiller x64">
+		<Description>RogueKiller is an anti-malware able to detect and remove generic malware and advanced threats like rootkits, rogues, worms.</Description>
+		<Location>Programs\Antimalware\RogueKillerX64.exe</Location>
+		<Link>http://www.adlice.com/download/roguekiller</Link>
+		<Icon>Icons/RogueKiller.jpg</Icon>
+	</Item>
+	<Item cat="Antimalware" name="RogueKiller CMD">
+		<Description>RogueKiller is an anti-malware able to detect and remove generic malware and advanced threats like rootkits, rogues, worms.</Description>
+		<Location>Programs\Antimalware\RogueKillerCMD.exe</Location>
+		<Link>http://www.adlice.com/download/roguekiller</Link>
+		<Icon>Icons/RogueKiller.jpg</Icon>
+	</Item>
+	<Item cat="Antimalware" name="RogueKiller CMD x64">
+		<Description>RogueKiller is an anti-malware able to detect and remove generic malware and advanced threats like rootkits, rogues, worms.</Description>
+		<Location>Programs\Antimalware\RogueKillerCMDX64.exe</Location>
+		<Link>http://www.adlice.com/download/roguekiller</Link>
+		<Icon>Icons/RogueKiller.jpg</Icon>
+	</Item>
+	<Item cat="Antimalware" name="Super Antispyware">
+		<Description>SUPERAntiSpyware is a free anti-spyware program that offers excellent detections and quick removal of common infections.</Description>
+		<Location>Programs\Antimalware\SUPERAntiSpyware.exe</Location>
+		<Link>http://www.superantispyware.com</Link>
+		<Icon>Icons/SAS.png</Icon>
+	</Item>
+	
+	<Item cat="Clean" name="CCleaner">
+		<Description>CCleaner is a program that will scan your computer for temporary files or private browser information and deletes it from your computer.</Description>
+		<Location>Programs\Clean\ccsetup\CCleaner.exe</Location>
+		<Link>https://www.piriform.com/ccleaner/download</Link>
+		<Icon>Icons/ccleaner.jpg</Icon>
+	</Item>
+	<Item cat="Clean" name="CCleaner x64">
+		<Description>CCleaner is a program that will scan your computer for temporary files or private browser information and deletes it from your computer.</Description>
+		<Location>Programs\Clean\ccsetup\CCleaner64.exe</Location>
+		<Link>https://www.piriform.com/ccleaner/download</Link>
+		<Icon>Icons/ccleaner.jpg</Icon>
+	</Item>
+	<Item cat="Clean" name="Delfix">
+		<Description>DelFix is designed to delete all removal tools used during a disinfection.</Description>
+		<Location>Programs\Clean\delfix.exe</Location>
+		<Link>https://toolslib.net/downloads/viewdownload/2-delfix</Link>
+		<Icon>Icons/Delfix.jpg</Icon>
+	</Item>
+	<Item cat="Clean" name="PC-Decrapifier">
+		<Description>The PC Decrapifier is a free tool that helps remove programs, unnecessary startup items that can slow down your PC.
+It takes you step by step, giving you recommendations on what to remove, many of which can be removed unattended.</Description>
+		<Location>Programs\Clean\pc-decrapifier.exe</Location>
+		<Link>https://www.pcdecrapifier.com</Link>
+		<Icon>Icons/pc-decrap.png</Icon>
+	</Item>
+	<Item cat="Clean" name="Revo Uninstaller">
+		<Description>Revo Uninstaller Pro helps you to uninstall software and remove unwanted programs installed on your computer easily!</Description>
+		<Location>Programs\Clean\revosetup.exe</Location>
+		<Link>https://www.revouninstaller.com</Link>
+		<Icon>Icons/revo.png</Icon>
+	</Item>
+	<Item cat="Clean" name="Shortcut Cleaner">
+		<Description>Shortcut Cleaner is a utility that will scan your computer for Windows shortcuts that have been hijacked by unwanted or malicious software.</Description>
+		<Location>Programs\Clean\sc-cleaner.exe</Location>
+		<Link>https://www.bleepingcomputer.com/download/shortcut-cleaner</Link>
+		<Icon>Icons/shortcutCleaner.png</Icon>
+	</Item>
+	<Item cat="Clean" name="AVG Remover">
+		<Description>AVG Remover is the last option to be used in case the AVG uninstall / repair installation process has failed</Description>
+		<Location>Programs\Clean\avg_remover.exe</Location>
+		<Link>http://www.avg.com/us-en/utilities</Link>
+		<Icon>Icons/AVG.png</Icon>
+	</Item>
+	<Item cat="Clean" name="McAfee Removal Tool">
+		<Description>The MCPR tool is designed to cleanup McAfee Consumer products when standard windows un-installation steps fail.</Description>
+		<Location>Programs\Clean\MCPR.exe</Location>
+		<Link>https://www.mcafee.com</Link>
+		<Icon>Icons/mac.png</Icon>
+	</Item>
+	<Item cat="Clean" name="Norton Removal Tool">
+		<Description>The Norton Remove and Reinstall tool uninstalls most Norton products, and reinstalls the latest version.</Description>
+		<Location>Programs\Clean\Norton_Removal_Tool.exe</Location>
+		<Link>https://us.norton.com/</Link>
+		<Icon>Icons/norton.png</Icon>
+	</Item>
+	<Item cat="Setup" name="Heimdal">
+		<Description>Heimdal FREE keeps your vulnerable applications up to date automatically and eliminates vulnerabilities used in cyber attacks.</Description>
+		<Location>Programs\Setup\HeimdalSetup.msi</Location>
+		<Link>https://heimdalsecurity.com/en/products/heimdal-free</Link>
+		<Icon>Icons/heimdal.png</Icon>
+	</Item>
+	<Item cat="Setup" name="Java Runtime Environment">
+		<Description>If you want to run Java programs, but not develop them, download the Java Runtime Environment, or JRE</Description>
+		<Location>Programs\Setup\jrex86.exe</Location>
+		<Link>http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html</Link>
+		<Icon>Icons/java.png</Icon>
+	</Item>
+	<Item cat="Setup" name="Java Runtime Environment x64">
+		<Description>If you want to run Java programs, but not develop them, download the Java Runtime Environment, or JRE</Description>
+		<Location>Programs\Setup\jrex64.exe</Location>
+		<Link>http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html</Link>
+		<Icon>Icons/java.png</Icon>
+	</Item>
+	<Item cat="Setup" name="LibreOffice">
+		<Description>LibreOffice is a powerful office suite – its clean interface and feature-rich tools help you unleash your creativity and enhance your productivity.</Description>
+		<Location>Programs\Setup\LibreOffice.msi</Location>
+		<Link>https://www.libreoffice.org/</Link>
+		<Icon>Icons/libreoffice.png</Icon>
+	</Item>
+	<Item cat="Setup" name="OpenOffice">
+		<Description>Apache OpenOffice is the leading open-source office software suite for word processing, spreadsheets, presentations, graphics, databases and more.</Description>
+		<Location>Programs\Setup\OpenOffice.exe</Location>
+		<Link>https://www.openoffice.org/</Link>
+		<Icon>Icons/openoffice.jpg</Icon>
+	</Item>
+	<Item cat="Setup" name="Adobe Reader">
+		<Description>PDF reader from Adobe</Description>
+		<Location>Programs\Setup\Reader.exe</Location>
+		<Link>https://get.adobe.com/reader/</Link>
+		<Icon>Icons/adobe.png</Icon>
+	</Item>
+	<Item cat="Setup" name="Unchecky">
+		<Description>Unchecky aims to keep potentially unwanted programs out of your computer.</Description>
+		<Location>Programs\Setup\unchecky.exe</Location>
+		<Link>https://unchecky.com/</Link>
+		<Icon>Icons/unchecky.png</Icon>
+	</Item>
+	<Item cat="Setup" name="Ninite Windows 7">
+		<Description>Installer for many basic application for Windows 7, including: LibreOffice, Chrome, VLC, CDBurnerXP, and Microsoft Security Essentials.</Description>
+		<Location>Programs\Setup\Win7Basic.exe</Location>
+		<Link>https://ninite.com/</Link>
+		<Icon>Icons/ninite.png</Icon>
+	</Item>
+	<Item cat="Setup" name="Ninite Windows 8-10">
+		<Description>Installer for many basic application for Windows 8, including: LibreOffice, Chrome, VLC, CDBurnerXP, and Classic Shell.</Description>
+		<Location>Programs\Setup\Win8-10Basic.exe</Location>
+		<Link>https://ninite.com/</Link>
+		<Icon>Icons/ninite.png</Icon>
+	</Item>
+	<Item cat="Tools" name="Blue Screen View">
+		<Description>BlueScreenView scans all your minidump files created during 'blue screen of death' crashes, and displays the information about all crashes in one table.</Description>
+		<Location>Programs\Tools\bluescreenview\BlueScreenView.exe</Location>
+		<Link>http://www.nirsoft.net/utils/blue_screen_view.html</Link>
+		<Icon>Icons/bluescreen.png</Icon>
+	</Item>
+	<Item cat="Tools" name="Blue Screen View x64">
+		<Description>BlueScreenView scans all your minidump files created during 'blue screen of death' crashes, and displays the information about all crashes in one table.</Description>
+		<Location>Programs\Tools\bluescreenview-x64\BlueScreenView.exe</Location>
+		<Link>http://www.nirsoft.net/utils/blue_screen_view.html</Link>
+		<Icon>Icons/bluescreen.png</Icon>
+	</Item>
+	<Item cat="Tools" name="Crystal Disk Info">
+		<Description>A HDD/SSD utility software which supports a part of USB connection and Intel RAID.</Description>
+		<Location>Programs\Tools\CDI\DiskInfo32S.exe</Location>
+		<Link>http://crystalmark.info/software/CrystalDiskInfo/index-e.html</Link>
+		<Icon>Icons/cdi.png</Icon>
+	</Item>
+	<Item cat="Tools" name="Crystal Disk Info x64">
+		<Description>A HDD/SSD utility software which supports a part of USB connection and Intel RAID.</Description>
+		<Location>Programs\Tools\CDI\DiskInfo64S.exe</Location>
+		<Link>http://crystalmark.info/software/CrystalDiskInfo/index-e.html</Link>
+		<Icon>Icons/cdi.png</Icon>
+	</Item>
+	<Item cat="Tools" name="HDD Scan">
+		<Description>HDDScan is a Free test tool for hard disk drives, USB flash, RAID volumes and SSD drives.</Description>
+		<Location>Programs\Tools\HDDScan\HDDScan.exe</Location>
+		<Link>http://hddscan.com/</Link>
+		<Icon>Icons/hddscan.png</Icon>
+	</Item>
+	<Item cat="Tools" name="Produkey">
+		<Description>HDDScan is a Free test tool for hard disk drives, USB flash, RAID volumes and SSD drives.</Description>
+		<Location>Programs\Tools\produkey\ProduKey.exe</Location>
+		<Link>http://www.nirsoft.net/utils/product_cd_key_viewer.html</Link>
+		<Icon>Icons/produkey.gif</Icon>
+	</Item>
+	<Item cat="Tools" name="Windows Repair All-in-One">
+		<Description>General repair tool for the Windows operating system.</Description>
+		<Location>Programs\Tools\raio\wr\Repair_Windows.exe</Location>
+		<Link>http://www.tweaking.com/</Link>
+		<Icon>Icons/wraio.jpg</Icon>
+	</Item>
+	<Item cat="Tools" name="Registry Backup">
+		<Description>Backs up the system registry.</Description>
+		<Location>Programs\Tools\regbak\TweakingRegistryBackup.exe</Location>
+		<Link>http://www.tweaking.com/</Link>
+		<Icon>Icons/rb.jpg</Icon>
+	</Item>
+	<Item cat="Tools" name="Simple System Tweaker">
+		<Description>Makes simple tweaks to help improve system performance.</Description>
+		<Location>Programs\Tools\sst\Simple_System_Tweaker.exe</Location>
+		<Link>http://www.tweaking.com/</Link>
+		<Icon>Icons/sst.jpg</Icon>
+	</Item>
+	<Item cat="Tools" name="Shadow Explorer">
+		<Description>You can restore lost or damaged files from Shadow Copies. However, it is by no means a replacement for traditional backups!</Description>
+		<Location>Programs\Tools\ShadowExplorer\ShadowExplorer\ShadowExplorerPortable.exe</Location>
+		<Link>http://www.shadowexplorer.com/downloads.html</Link>
+		<Icon>Icons/shadow.png</Icon>
+	</Item>
+	<Item cat="Tools" name="Speccy">
+		<Description>Look inside your PC and find all its hardware specs with Speccy from Piriform.</Description>
+		<Location>Programs\Tools\spsetup\Speccy.exe</Location>
+		<Link>https://www.piriform.com/speccy</Link>
+		<Icon>Icons/speccy.jpg</Icon>
+	</Item>
+	<Item cat="Tools" name="Speccy x64">
+		<Description>Look inside your PC and find all its hardware specs with Speccy from Piriform.</Description>
+		<Location>Programs\Tools\spsetup\Speccy64.exe</Location>
+		<Link>https://www.piriform.com/speccy</Link>
+		<Icon>Icons/speccy.jpg</Icon>
+	</Item>
+	<Item cat="Tools" name="TCP View">
+		<Description>TCPView is a Windows program that will show you detailed listings of all TCP and UDP endpoints on your system, including the local and remote addresses and state of TCP connections.</Description>
+		<Location>Programs\Tools\TCPView\Tcpview.exe</Location>
+		<Link>https://technet.microsoft.com/en-us/sysinternals/tcpview.aspx</Link>
+		<Icon>Icons/tcpview.png</Icon>
+	</Item>
+	<Item cat="Tools" name="WMI Explorer">
+		<Description>WMI Explorer is a utility intended to provide the ability to browse and view WMI namespaces/classes/instances/properties in a single pane of view and is inspired by the PowerShell based WMI Explorer written by Marc.</Description>
+		<Location>Programs\Tools\WMIExplorer\WMIExplorer.exe</Location>
+		<Link>https://wmie.codeplex.com/</Link>
+		<Icon>Icons/wheel.jpg</Icon>
+	</Item>
+	<Item cat="Tools" name="Belarc Advisor">
+		<Description>The Belarc Advisor builds a detailed profile of your installed software and hardware, network inventory, any missing Microsoft hotfixes, anti-virus status, security benchmarks, and displays the results in your Web browser.</Description>
+		<Location>Programs\Tools\Belarc.exe</Location>
+		<Link>https://www.belarc.com/products_belarc_advisor</Link>
+		<Icon>Icons/belarc.gif</Icon>
+	</Item>
+	<Item cat="Tools" name="Blitz Blank">
+		<Description>BlitzBlank is an advanced system administration tool that allows you to disable drivers, delete files, folders, Windows Registry keys and values that are in-use or locked by malware.</Description>
+		<Location>Programs\Tools\BlitzBlank.exe</Location>
+		<Link>https://www.bleepingcomputer.com/download/blitzblank/</Link>
+		<Icon>Icons/blitzblank.jpg</Icon>
+	</Item>
+	<Item cat="Tools" name="Combofix">
+		<Description>ComboFix is a program, created by sUBs, that scans your computer for known malware, and when found, attempts to clean these infections automatically.</Description>
+		<Location>Programs\Tools\Combofix.exe</Location>
+		<Link>https://www.bleepingcomputer.com/download/combofix/</Link>
+		<Icon>Icons/combofix.png</Icon>
+	</Item>
+	<Item cat="Tools" name="DDS">
+		<Description>DDS is a program that will scan your computer and create logs that can be used to display various startup, configuration, and file information from your computer.</Description>
+		<Location>Programs\Tools\dds.com</Location>
+		<Link>https://www.bleepingcomputer.com/download/dds/</Link>
+		<Icon>Icons/dds.png</Icon>
+	</Item>
+	<Item cat="Tools" name="Defraggler">
+		<Description>Defrag entire hard drives or individual files. Works with HDD and SSD and supports NTFS and FAT32 file systems!</Description>
+		<Location>Programs\Tools\dfsetup.exe</Location>
+		<Link>https://www.piriform.com/defraggler</Link>
+		<Icon>Icons/df.png</Icon>
+	</Item>
+	<Item cat="Tools" name="Fix Exec">
+		<Description>FixExec is a program that is designed to fix executable file associations for the .bat, .exe, and .com file extensions.</Description>
+		<Location>Programs\Tools\FixExec.exe</Location>
+		<Link>https://www.bleepingcomputer.com/download/fixexec/</Link>
+		<Icon>Icons/fixexec.png</Icon>
+	</Item>
+	<Item cat="Tools" name="Fix Exec x64">
+		<Description>FixExec is a program that is designed to fix executable file associations for the .bat, .exe, and .com file extensions.</Description>
+		<Location>Programs\Tools\FixExecx64.exe</Location>
+		<Link>https://www.bleepingcomputer.com/download/fixexec/</Link>
+		<Icon>Icons/fixexec.png</Icon>
+	</Item>
+	<Item cat="Tools" name="Farbar Service Scanner">
+		<Description>Farbar Service Scanner allows you to diagnose network connectivity issues due to corrupted or missing Windows services.</Description>
+		<Location>Programs\Tools\FSS.exe</Location>
+		<Link>https://www.bleepingcomputer.com/download/farbar-service-scanner/</Link>
+		<Icon>Icons/fss.png</Icon>
+	</Item>
+	<Item cat="Tools" name="Furmark">
+		<Description>FurMark is a very intensive OpenGL benchmark that uses fur rendering algorithms to measure the performance of the graphics card.</Description>
+		<Location>Programs\Tools\FurMark.exe</Location>
+		<Link>http://www.ozone3d.net/benchmarks/fur/</Link>
+		<Icon>Icons/furmark.jpg</Icon>
+	</Item>
+	<Item cat="Tools" name="GlassWire">
+		<Description>GlassWire reveals hosts that are known threats, unexpected network system file changes, unusual application changes, ARP spoofing, DNS changes, and alerts you to the problem so you can take action.</Description>
+		<Location>Programs\Tools\GlassWireSetup.exe</Location>
+		<Link>https://www.glasswire.com/</Link>
+		<Icon>Icons/glasswire.jpg</Icon>
+	</Item>
+	<Item cat="Tools" name="Magic Jellybean Keyfinder">
+		<Description>The Magical Jelly Bean Keyfinder is a freeware utility that retrieves your Product Key (cd key) used to install windows from your registry.</Description>
+		<Location>Programs\Tools\KeyFinderInstaller.exe</Location>
+		<Link>https://www.magicaljellybean.com/keyfinder/</Link>
+		<Icon>Icons/jellybean.jpg</Icon>
+	</Item>
+	<Item cat="Tools" name="Malwarebytes Anti-Exploit">
+		<Description>Malwarebytes will continue to test cutting-edge anti-exploit technology in a free beta version of Malwarebytes Anti-Exploit.</Description>
+		<Location>Programs\Tools\mbae.exe</Location>
+		<Link>https://www.malwarebytes.com/antiexploit/</Link>
+		<Icon>Icons/MAE.jpg</Icon>
+	</Item>
+	<Item cat="Tools" name="Net Adapter Repair">
+		<Description>NetAdapter Repair All In One is a utility that acts as a Swiss army knife for network related Windows tasks.</Description>
+		<Location>Programs\Tools\NetAdapterRepair.exe</Location>
+		<Link>https://www.bleepingcomputer.com/download/netadapter-repair-all-in-one/</Link>
+		<Icon>Icons/NetRepair.jpg</Icon>
+	</Item>
+	<Item cat="Tools" name="OldTimer ListIt">
+		<Description>OTL, or OldTimer ListIt, is a tool that is used to diagnose a computer for a possible malware presence and to provide system diagnostics information that can by someone working on a computer.</Description>
+		<Location>Programs\Tools\OTL.exe</Location>
+		<Link>https://www.bleepingcomputer.com/download/otl//</Link>
+		<Icon>Icons/otl.png</Icon>
+	</Item>
+	<Item cat="Tools" name="Patch My PC">
+		<Description>Patch My PC Updater is a free, easy-to-use program that keeps over 100 programs up-to-date on your computer.</Description>
+		<Location>Programs\Tools\PatchMyPC.exe</Location>
+		<Link>https://patchmypc.net/download</Link>
+		<Icon>Icons/pmp.png</Icon>
+	</Item>
+	<Item cat="Tools" name="MiniTool Data Recovery">
+		<Description>Patch My PC Updater is a free, easy-to-use program that keeps over 100 programs up-to-date on your computer.</Description>
+		<Location>Programs\Tools\pdatarecovery.exe</Location>
+		<Link>http://www.minitool.com/data-recovery.html</Link>
+		<Icon>Icons/mdr.png</Icon>
+	</Item>
+	<Item cat="Tools" name="Putty">
+		<Description>PuTTY is an SSH and telnet client, developed originally by Simon Tatham for the Windows platform.</Description>
+		<Location>Programs\Tools\putty.exe</Location>
+		<Link>http://www.putty.org/</Link>
+		<Icon>Icons/putty.png</Icon>
+	</Item>
+	<Item cat="Tools" name="Recuva">
+		<Description>Recuva recovers files from your Windows computer, recycle bin, digital camera card, or MP3 player!</Description>
+		<Location>Programs\Tools\rcsetup.exe</Location>
+		<Link>https://www.piriform.com/recuva</Link>
+		<Icon>Icons/recuva.png</Icon>
+	</Item>
+	<Item cat="Tools" name="Resource Hacker">
+		<Description>Resource Hacker™ has been designed to be the complete resource editing tool: compiling, viewing, decompiling and recompiling resources for both 32bit and 64bit Windows executables.</Description>
+		<Location>Programs\Tools\reshack.exe</Location>
+		<Link>http://www.angusj.com/resourcehacker/</Link>
+		<Icon>Icons/reshack.png</Icon>
+	</Item>
+	<Item cat="Tools" name="RKill">
+		<Description>RKill is a program that was developed at BleepingComputer.com that attempts to terminate known malware processes so that your normal security software can then run and clean your computer of infections</Description>
+		<Location>Programs\Tools\rkill.exe</Location>
+		<Link>https://www.bleepingcomputer.com/download/rkill/</Link>
+		<Icon>Icons/RKill.png</Icon>
+	</Item>
+	<Item cat="Tools" name="Security Check">
+		<Description>SecurityCheck is a program that searches for installed and running security programs on a user's program.</Description>
+		<Location>Programs\Tools\SecurityCheck.exe</Location>
+		<Link>https://www.bleepingcomputer.com/download/securitycheck/</Link>
+		<Icon>Icons/scheck.jpg</Icon>
+	</Item>
+	<Item cat="Tools" name="Temp File Cleaner">
+		<Description>TFC. or Temp File Cleaner, is a small utility that will clean out all the folders on your computer that house temporary files.</Description>
+		<Location>Programs\Tools\TFC.exe</Location>
+		<Link>https://www.bleepingcomputer.com/download/tfc/</Link>
+		<Icon>Icons/tfc.png</Icon>
+	</Item>
+	<Item cat="Tools" name="IObit Unlocker">
+		<Description>IObit Unlocker is a free program that allows you to unlock in use or locked files so that you delete, rename, or move them.</Description>
+		<Location>Programs\Tools\unlocker-setup.exe</Location>
+		<Link>https://www.bleepingcomputer.com/download/iobit-unlocker/</Link>
+		<Icon>Icons/unlocker.png</Icon>
+	</Item>
+	<Item cat="Tools" name="WinDirStat">
+		<Description>WinDirStat scans one or more hard drives and produces a detailed map or the disk making space hogs immediately apparent.</Description>
+		<Location>Programs\Tools\windirstat.exe</Location>
+		<Link>https://www.bleepingcomputer.com/download/windirstat/</Link>
+		<Icon>Icons/wds.png</Icon>
+	</Item>
+	
+
+
+
+
+</Programs>

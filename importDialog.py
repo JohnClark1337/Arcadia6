@@ -12,6 +12,8 @@ class Ui_frmImport(object):
     def setupUi(self, frmImport):
         frmImport.setObjectName("frmImport")
         frmImport.resize(448, 299)
+        frmImport.setMinimumSize(QtCore.QSize(448, 299))
+        frmImport.setMaximumSize(QtCore.QSize(448, 299))
         self.txtInstructions = QtWidgets.QTextEdit(frmImport)
         self.txtInstructions.setEnabled(False)
         self.txtInstructions.setGeometry(QtCore.QRect(30, 20, 391, 181))

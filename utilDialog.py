@@ -12,6 +12,8 @@ class Ui_frmUtilities(object):
     def setupUi(self, frmUtilities):
         frmUtilities.setObjectName("frmUtilities")
         frmUtilities.resize(593, 309)
+        frmUtilities.setMinimumSize(QtCore.QSize(593, 309))
+        frmUtilities.setMaximumSize(QtCore.QSize(593, 309))
         self.tbxFrom = QtWidgets.QLineEdit(frmUtilities)
         self.tbxFrom.setGeometry(QtCore.QRect(20, 30, 281, 20))
         self.tbxFrom.setFocusPolicy(QtCore.Qt.StrongFocus)
