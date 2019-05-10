@@ -113,10 +113,7 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
         self.btnAdd.clicked.connect(self.addEntry)
         self.actionClose.triggered.connect(self.close)
         self.btnExit.clicked.connect(self.close)
-        clearTempList()
-        copyfile('Programs.xml', 'temp.xml')
-        readProgramList('temp.xml', tempList)
-        self.populateList(self.lstMod, tempList)
+        self.resetList()
         self.btnChange.clicked.connect(self.changeEntry)
         self.btnImport.clicked.connect(self.impApps)
         self.btnBackup.clicked.connect(self.mainBackup)
@@ -129,7 +126,14 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
         copyfile('Programs.xml', 'temp.xml')
         readProgramList('temp.xml', tempList)
         self.refreshList()
+        self.resetColors(self.lstCurrent)
+        self.resetColors(self.lstMod)
         
+
+    def resetColors(self, lname):
+        for i in range(lname.count()):
+            item = lname.item(i)
+            item.setBackground(QtGui.QBrush(QtCore.Qt.white, QtCore.Qt.SolidPattern))
 
     
     def addEntry(self):
@@ -191,7 +195,8 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
     
     def mainBackup(self):
         bac = QtWidgets.QFileDialog.getSaveFileName(self, "Backup Program List", "", "XML File (*.xml)")
-        copyfile('Programs.xml', bac[0])
+        if bac[0] != '':
+            copyfile('Programs.xml', bac[0])
 
     def showDiffs(self, state):
         if state == QtCore.Qt.Checked:
@@ -232,6 +237,8 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
             self.lblLeftArrow.hide()
             self.lblModDiff.hide()
             self.lblRightArrow.hide()
+            self.resetColors(self.lstCurrent)
+            self.resetColors(self.lstMod)
 
 
     def colorChange(self, l, w1, w2, c):
