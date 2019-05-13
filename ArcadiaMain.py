@@ -15,6 +15,22 @@ import diaAddProg
 import utilDialog
 import importDialog
 
+
+"""
+ArcadiaPy()
+Arguments:
+    Form Initialization Arguments
+Description:
+Graphical interface for Arcadia 6. This application is a toolbox that enables users to store
+and run various computer repair applications and utilities. The user has control over which
+applications are available to them, can add and remove applications as they please. Also contains
+some utilities built in that may be useful to the user.
+
+Previous versions of this application were written in C# and designed to run only on Windows platforms,
+but this version has been rewritten in python with Qt for the purpose of cross-compatibility with other
+operating systems. The goal is also to make an application that is easy to run on any machine.
+"""
+
 class ArcadiaPy(QtWidgets.QMainWindow, Arcadia6.Ui_MainWindow):
     def __init__(self, parent=None):
         super(ArcadiaPy, self).__init__(parent)
@@ -36,22 +52,74 @@ class ArcadiaPy(QtWidgets.QMainWindow, Arcadia6.Ui_MainWindow):
         self.btnUtilites.clicked.connect(self.openUtil)
     
 
+    """
+    ArcadiaPy::openEditor()
+    Arguments:
+        self: referring to parent class
+    Description:
+    Opens up the Program Editor so that the user can modify the applications present in the
+    Arcadia 6 toolbox. Usually attached to btnEditor.
+    """
+
+
     def openEditor(self):
         formEdit = EditorPy(self)
         formEdit.show()
 
+
+    """
+    ArcadiaPy::openUtil()
+    Arguments:
+        self: referring to parent class
+    Description:
+    Opens up the Utility Dialog box (UtilDialog) which allows the user to run certain utilities
+    such as file and driver backup. Usually attached to btnUtilities.
+    """
+
+
     def openUtil(self):
         util = UtilDialog(self)
         util.show()
+
+
+    """
+    ArcadiaPy::clearLists()
+    Arguments:
+        self: referring to parent class
+    Description:
+    Clears all the items from the list widgets.
+    """
 
     def clearLists(self):
         self.lstWindows.clear()
         self.lstLinux.clear()
         self.lstMac.clear()
 
+    """
+    ArcadiaPy::keyPressEvent()
+    Arguments:
+        self: referring to parent class
+        event: event that has taken place (in this case a keypress)
+    Description:
+    If enter key is pressed at any time while Arcadia6 main form is in focus, attempt to run
+    whatever application is currently selected in the main list.
+    """
+
+
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_Return:
             runProgram()
+
+    """
+    ArcadiaPy::softwareList()
+    Arguments:  
+        self: referring to parent class
+        category: Group that application belongs to (Antivirus, Antimalware, etc.)
+    Description:
+    Determines which applications appear on the list depending on the category button
+    that is pressed.
+    """
+
 
     def softwareList(self, category):
         self.clearLists()
@@ -68,6 +136,16 @@ class ArcadiaPy(QtWidgets.QMainWindow, Arcadia6.Ui_MainWindow):
         else:
             self.lstWindows.addItems(mainList[0])
         self.lstWindows.setCurrentRow(0)
+
+    """
+    ArcadiaPy::popWinSoft()
+    Arguments:
+        self: referring to parent class
+    Description:
+    Populates the listbox for Windows software present in Arcadia 6. Uses "Programs.xml" to populate.
+    Also shows the application's icon, displays a brief summary, shows the website for the application,
+    and tells the user if the application is available to run or not.
+    """
 
 
     def popWinSoft(self):
@@ -99,6 +177,14 @@ class ArcadiaPy(QtWidgets.QMainWindow, Arcadia6.Ui_MainWindow):
             self.iconImage.setPixmap(pix)
 
 
+"""
+EditorPy()
+Arguments:
+    Dialog Definition
+Description:
+An Editor that allows the user to modify the list of applications present within the Arcadia toolbox.
+"""
+
 class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
     def __init__(self, parent=None):
         super(EditorPy, self).__init__(parent)
@@ -120,6 +206,15 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
         self.btnLoad.clicked.connect(self.loadList)
         self.btnReset.clicked.connect(self.resetList)
 
+
+    """
+    EditorPy::resetList()
+    Arguments:
+        self: referring to parent class
+    Description:
+    Completely resets the temp.xml, tempList, and lstMod, and resets the colors in lstMod and lstCurrent to white.
+    """
+
     
     def resetList(self):
         clearTempList()
@@ -130,17 +225,46 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
         self.resetColors(self.lstMod)
         
 
+    """
+    EditorPy::resetColors
+    Arguments:
+        self: referring to parent class
+        lname: list name
+    Description: Goes through ever item in the list (lname) and sets the background color to white.
+    """
+
+
     def resetColors(self, lname):
         for i in range(lname.count()):
             item = lname.item(i)
             item.setBackground(QtGui.QBrush(QtCore.Qt.white, QtCore.Qt.SolidPattern))
 
     
+    """
+    EditorPy::addEntry()
+    Arguments:
+        self: referring to parent class
+    Description:
+    Opens up the add program dialog (AddProg) so that the user can import information for an
+    application to add to the main list.
+    """
+
+
     def addEntry(self):
         changeList.clear()
         addDia = AddProg(self)
         addDia.show()
         self.refreshList()
+
+    """
+    EditorPy::impApps()
+    Arguments:
+        self: referring to parent class
+    Description:
+    Opens up the import dialog (ImpDialog) used to import a large group of applications automatically.
+    Function is usually connected to btnImport.
+    """
+
 
     def impApps(self):
         btnQuestion = QtWidgets.QMessageBox.question(self, "Proceed to Import", "This will remove unsaved changes. Continue?", QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
@@ -148,6 +272,15 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
             iDia = ImpDialog(self)
             iDia.show()
     
+    """
+    EditorPy::loadList()
+    Arguments:
+        self: referring to parent class
+    Description:
+    Enables user to load an existing xml list of programs. Useful for reloading a backup list.
+    """
+
+
     def loadList(self):
         btnQuestion = QtWidgets.QMessageBox.question(self, "Proceed to Load", "This will remove unsaved changes. Continue?", QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
         if btnQuestion == QtWidgets.QMessageBox.Yes:
@@ -161,6 +294,16 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
                 clearTempList()
                 readProgramList('temp.xml', tempList)
 
+    """
+    EditorPy::changeEntry()
+    Arguments:
+        self: referring to parent class
+    Description:
+    Allows user to edit an entry selected in lstMod. Takes the name from lstMod, gets the
+    information from temp.xml for that entry, and uses it to populate an AddProg dialog box.
+    """
+
+
     def changeEntry(self):
         changeList.clear()
         cname = self.lstMod.selectedItems()
@@ -172,6 +315,18 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
         else:
             dialog("No Entry Selected", "Nothing Selected")
         self.refreshList()
+
+
+    """
+    EditorPy::removeEntry()
+    Arguments:
+        self: referring to parent class
+        n='': if name is specified, use that, otherwise keep blank
+    Description:
+    Can be used either with specific program name, or by taking the name of the selected
+    lstMod item. It removes whatever program is specified from the temp.xml file and then
+    refreshes the tempList and GUI (lstMod) to show the changes.
+    """
 
 
     def removeEntry(self, n=''):
@@ -192,11 +347,32 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
         tree.write("temp.xml")  
         self.refreshList()
 
+    """
+    EditorPy::mainBackup()
+    Arguments:
+        self: referring to parent
+    Description:
+    Creates backup of current application list in location designated by user. Uses copyfile to copy
+    Programs.xml to another location.
+    """
+
     
     def mainBackup(self):
         bac = QtWidgets.QFileDialog.getSaveFileName(self, "Backup Program List", "", "XML File (*.xml)")
         if bac[0] != '':
             copyfile('Programs.xml', bac[0])
+
+    """
+    EditorPy::showDiffs()
+    Arguments:
+        self: referring to parent class
+        state: state of chkChanges (True or False)
+    Description:
+    Displays arrows and labels to show number of apps that are being removed and added. Also changes colors
+    of added/removed entries in lstCurrent and lstMod so that the changed applications can
+    be me easily identified.
+    """
+
 
     def showDiffs(self, state):
         if state == QtCore.Qt.Checked:
@@ -241,6 +417,21 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
             self.resetColors(self.lstMod)
 
 
+    """
+    EditorPy::colorChange()
+    Arguments:
+        self: referring to parent class
+        l: takes in mainList or tempList
+        w1: Widget 1, takes in qlistwidget
+        w2: Widget 2, takes in qlistwidget
+        c: Color that you want list item background color to be
+    Description:
+    Take each item from each category from each list item and uses it for comparison. Tests if
+    the item matches an item in qlistwidget 1. If it does not match any entry, find the same
+    entry in qlistwidget 2 and change the background color of that qlist item to 'c'. 
+    """
+
+
     def colorChange(self, l, w1, w2, c):
         for zitem in l:
             for prog in zitem:
@@ -248,6 +439,16 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
                 if len(it) == 0:
                     w2.findItems(prog, QtCore.Qt.MatchExactly)[0].setBackground(QtGui.QBrush(c, QtCore.Qt.SolidPattern))
                 
+
+    """
+    EditorPy::populateList()
+    Arguments:
+        self: referring to parent class
+        wid: for passing the list widget that will be populated
+        biglist: for passing the list that will be used to populate the widgets
+    Description:
+    Used for populating list widgets using mainList or tempList
+    """
 
 
     def populateList(self, wid, biglist):
@@ -262,6 +463,16 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
         wid.addItem("\n\nRandom Tools:\n")
         wid.addItems(biglist[4])
 
+    """
+    EditorPy::refreshList()
+    Arguments:
+        self: referring to parent class
+    Description:
+    Clears the modified list box, clears the templist list, and repopulates both using temp.xml.
+    It also refreshes showDiffs if chkChanges is checked. 
+    """
+
+
     def refreshList(self):
         self.lstMod.clear()
         for item in tempList:
@@ -271,7 +482,13 @@ class EditorPy(QtWidgets.QMainWindow, progEditor.Ui_frmXMLEdit):
         if self.chkChanges.isChecked() == True:
             self.showDiffs(QtCore.Qt.Checked)
 
-    
+"""
+AddProg()
+Arguments:
+    Dialog Definition
+Description:
+Dialog for entering information for adding and/or editing programs in the temporary list
+"""
         
 
 class AddProg(QtWidgets.QDialog, diaAddProg.Ui_diaAddProg):

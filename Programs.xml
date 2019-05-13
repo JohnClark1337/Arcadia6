@@ -239,7 +239,7 @@ It takes you step by step, giving you recommendations on what to remove, many of
 		<Description>PDF reader from Adobe</Description>
 		<Location>Programs\Setup\Reader.exe</Location>
 		<Link>https://get.adobe.com/reader/</Link>
-		<Icon>Icons/adobe.png</Icon>
+		<Icon>Icons/Adobe Acrobat Reader.ico</Icon>
 	</Item>
 	<Item cat="Setup" name="Unchecky">
 		<Description>Unchecky aims to keep potentially unwanted programs out of your computer.</Description>
