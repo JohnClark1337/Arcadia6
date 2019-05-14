@@ -646,9 +646,31 @@ class ImpDialog(QtWidgets.QMainWindow, importDialog.Ui_frmImport):
     """
 
     def importEverything(self):
-        for item in tempList:
-            for x in item:
-                print(x)
+        importFolder = self.tbxImFolder.text()
+        av = importFolder + "/Antivirus"
+        am = importFolder + "/Antimalware"
+        cl = importFolder + "/Clean"
+        st = importFolder + "/Setup"
+        tl = importFolder + "/Tools"
+        checkList = {av: "Antivirus", am: "Antimalware", cl: "Clean", st: "Setup", tl: "Tools"}
+        filelist = list()
+        if os.path.isdir(importFolder):
+            for ci in checkList:
+                if os.path.isdir(ci):
+                    filelist = os.listdir(ci)
+                    for item in filelist:
+                        fname, fext = os.path.splitext(item)
+                        readProgramList('temp.xml',None, fname)
+                        if fext == '.exe' or fext == '.msi':
+                            if len(changeList) > 0:
+                                writeTempList('temp.xml', checkList[ci], fname, " ", ci + "/" + item, "www.google.com", "")
+                            else:
+                                dialog("Name already exists", "Name Already Exists")
+                else:
+                    dialog("Directory " + ci + " does not exist", "No Directory")
+        else:
+            dialog("Directory does not exist", "No Directory")
+                
 
 
 """
@@ -971,6 +993,7 @@ and populates the qlistbox widget with the names taken from xml file based on ap
 
 
 def readProgramList(fileLoc, biglist=None, search=""):
+    changeList.clear()
     root = ET.parse(fileLoc).getroot()
     for item in root.findall('ns1:Item', namespace):
         if search == "" and biglist != None:
